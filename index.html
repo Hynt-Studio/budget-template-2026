@@ -1,0 +1,2960 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Interactive digital marketing projection tool for the UK charity sector, 2026."
+    />
+    <meta name="author" content="Hynt" />
+    <meta
+      property="og:title"
+      content="Digital Marketing Projections 2026 — UK Charity Sector"
+    />
+    <meta
+      property="og:description"
+      content="Interactive digital marketing projection tool for the UK charity sector, 2026."
+    />
+    <meta property="og:type" content="website" />
+    <title>Digital Marketing Projections 2026 — UK Charity Sector</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Poppins:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --red: #c96145;
+        --red-dark: #9e3f2b;
+        --green: #456249;
+        --green-dark: #2e4230;
+        --green-pale: #0f1a10;
+        --gold: #d7b981;
+        --gold-pale: #1f1800;
+        --meta: #84a7af;
+        --google: #eaa474;
+        --pri: #e7cee9;
+        --bg: #000000;
+        --surface: #252525;
+        --surface-alt: #1e1e1e;
+        --text: #f0f0f0;
+        --text-sec: #cda761;
+        --text-light: #888888;
+        --border: #383838;
+        --border-dark: #4a4a4a;
+        --radius: 10px;
+        --radius-sm: 6px;
+        --shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+      }
+
+      html {
+        font-size: 15px;
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: 'Poppins', system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        line-height: 1.6;
+      }
+
+      /* ── Typography ── */
+      h1,
+      h2,
+      h3,
+      h4 {
+        font-family: 'Space Grotesk', sans-serif;
+        line-height: 1.2;
+      }
+      h1 {
+        font-size: 1.5rem;
+        font-weight: 800;
+      }
+      h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--pri);
+        margin-bottom: 0.5rem;
+      }
+      h3 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--pri);
+        margin-bottom: 0.4rem;
+      }
+      h4 {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-sec);
+        margin-bottom: 0.6rem;
+      }
+
+      /* ── Header ── */
+      .header {
+        background: #000000;
+        color: #fff;
+        padding: 0.9rem 0;
+        border-bottom: 1px solid #2a2a2a;
+      }
+      .header-inner {
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .header h1 {
+        color: #fff;
+        font-size: 1.25rem;
+      }
+      .header-sub {
+        font-size: 0.78rem;
+        color: rgba(255, 255, 255, 0.75);
+        font-weight: 400;
+        margin-top: 0.1rem;
+        display: block;
+      }
+      .badge {
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 20px;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        color: #fff;
+      }
+
+      /* ── Layout ── */
+      .main {
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 1.6rem 2rem 3rem;
+      }
+
+      /* ── Tabs ── */
+      .tabs {
+        display: flex;
+        gap: 0;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        background: #1a1a1a;
+        border: 1px solid #3a3a3a;
+        border-bottom: none;
+        border-radius: var(--radius) var(--radius) 0 0;
+      }
+      .tab {
+        flex: 1;
+        min-width: 0;
+        padding: 0.75rem 0.6rem;
+        background: none;
+        border: none;
+        border-bottom: 3px solid transparent;
+        cursor: pointer;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: #999999;
+        white-space: nowrap;
+        text-align: center;
+        transition: all 0.18s;
+      }
+      .tab:hover {
+        background: #242424;
+        color: #dddddd;
+      }
+      .tab.active {
+        background: var(--surface);
+        color: var(--pri);
+        border-bottom-color: var(--pri);
+        font-weight: 700;
+      }
+      .tab .tab-type {
+        display: block;
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        opacity: 0.5;
+        margin-bottom: 0.1rem;
+      }
+      .tab.active .tab-type {
+        opacity: 0.65;
+        color: var(--pri);
+      }
+
+      /* ── Panels ── */
+      .panels {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-top: none;
+        border-radius: 0 0 var(--radius) var(--radius);
+        box-shadow: var(--shadow-md);
+        min-height: 300px;
+      }
+      .panel {
+        display: none;
+        padding: 1.8rem;
+      }
+      .panel.active {
+        display: block;
+        animation: fadeUp 0.25s ease;
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(5px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ── Panel navigation ── */
+      .panel-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.25rem 1.5rem;
+        border-top: 1px solid var(--border);
+        margin-top: 2rem;
+      }
+      .panel-nav--right {
+        justify-content: flex-end;
+      }
+      .panel-nav--left {
+        justify-content: flex-start;
+      }
+
+      .panel-nav-btn {
+        font-family: inherit;
+        font-size: 0.875rem;
+        font-weight: 600;
+        padding: 0.55rem 1.1rem;
+        border-radius: var(--radius);
+        border: 1.5px solid var(--pri);
+        background: transparent;
+        color: var(--pri);
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          color 0.15s;
+      }
+      .panel-nav-btn:hover {
+        background: var(--pri);
+        color: #1a1a1a;
+      }
+
+      /* ── Summary KPI strip ── */
+      .kpi-strip {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 0.8rem;
+        margin-bottom: 1.6rem;
+      }
+      .kpi {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1rem 1.2rem;
+        box-shadow: var(--shadow);
+      }
+      .kpi-label {
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--text-sec);
+        margin-bottom: 0.3rem;
+      }
+      .kpi-value {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--pri);
+      }
+      .kpi-value.green {
+        color: var(--green-dark);
+      }
+      .kpi-value.red {
+        color: var(--red);
+      }
+      .kpi-sub {
+        font-size: 0.72rem;
+        color: var(--text-sec);
+        margin-top: 0.15rem;
+      }
+
+      /* ── Summary table ── */
+      .table-wrap {
+        overflow-x: auto;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        margin-bottom: 1.6rem;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.82rem;
+      }
+      thead th {
+        background: var(--pri);
+        color: var(--green-dark);
+        padding: 0.6rem 0.9rem;
+        text-align: left;
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+      }
+      thead th:not(:first-child) {
+        text-align: right;
+      }
+      tbody tr {
+        background: #fff;
+        border-bottom: 1px solid var(--pri);
+        transition: background 0.15s;
+      }
+      tbody tr:last-child {
+        border-bottom: none;
+      }
+      tbody tr:hover {
+        background: var(--pri);
+      }
+      tbody td {
+        padding: 0.55rem 0.9rem;
+        vertical-align: middle;
+        color: var(--green-dark);
+      }
+      tbody td:not(:first-child) {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+      .row-group td {
+        background: var(--text);
+        font-weight: 600;
+        font-size: 0.78rem;
+        color: var(--green-dark);
+      }
+      .row-total td {
+        background: var(--pri);
+        color: var(--green-dark);
+        font-weight: 700;
+        font-family: 'Space Grotesk', sans-serif;
+      }
+      .row-total td:not(:first-child) {
+        color: var(--green-dark);
+      }
+      .row-subtotal td {
+        background: var(--pri);
+        font-weight: 700;
+      }
+      .badge-meta {
+        background: #dceaed;
+        color: #3d7880;
+        padding: 0.15rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.68rem;
+        font-weight: 700;
+      }
+      .badge-google {
+        background: #f7e8e2;
+        color: #8a3d28;
+        padding: 0.15rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.68rem;
+        font-weight: 700;
+      }
+      .campaign-name {
+        font-weight: 600;
+        color: var(--green-dark);
+      }
+      .campaign-product {
+        font-size: 0.72rem;
+        color: var(--green);
+        display: block;
+      }
+
+      /* ── Section cards ── */
+      .section-card {
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        margin-bottom: 1.4rem;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+      .section-head {
+        padding: 0.7rem 1.1rem;
+        font-weight: 700;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        border-bottom: 1px solid var(--border);
+        font-family: 'Poppins', sans-serif;
+      }
+      .section-head.meta,
+      .results.meta {
+        background: linear-gradient(135deg, #dceaed, #e8f1f3);
+        color: #3d7880;
+        border-bottom-color: #b5d2d8;
+      }
+      .section-head.google {
+        background: linear-gradient(135deg, #f7e8e2, #faf0eb);
+        color: #8a3d28;
+        border-bottom-color: #e8c0ad;
+      }
+      .section-head.email-head {
+        background: linear-gradient(135deg, #e8f0e9, #eff5f0);
+        color: var(--green-dark);
+        border-bottom-color: #bdd5bf;
+      }
+      .section-head.tele-head {
+        background: linear-gradient(135deg, #f3ecda, #f8f4ea);
+        color: #7a5e20;
+        border-bottom-color: #d9c88a;
+      }
+      .section-head.neutral {
+        background: var(--surface-alt);
+        color: var(--pri);
+      }
+      .section-body {
+        padding: 1.2rem 1.4rem;
+      }
+
+      /* ── Two-col layout for inputs/outputs ── */
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.6rem;
+      }
+      @media (max-width: 700px) {
+        .two-col {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* ── Inputs ── */
+      .field {
+        margin-bottom: 0.75rem;
+      }
+      .field label {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.28rem;
+      }
+      .field label .note {
+        font-weight: 400;
+        color: var(--text-light);
+        font-size: 0.72rem;
+      }
+      .input-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+      .input-wrap .pre,
+      .input-wrap .suf {
+        position: absolute;
+        color: var(--text-sec);
+        font-weight: 600;
+        font-size: 0.85rem;
+        pointer-events: none;
+      }
+      .input-wrap .pre {
+        left: 0.65rem;
+      }
+      .input-wrap .suf {
+        right: 0.65rem;
+      }
+      .input-wrap input {
+        width: 100%;
+        padding: 0.5rem 0.65rem;
+        border: 1.5px solid var(--border-dark);
+        border-radius: var(--radius-sm);
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text);
+        background: var(--surface);
+        transition:
+          border-color 0.18s,
+          box-shadow 0.18s;
+        appearance: none;
+      }
+      .input-wrap input:focus {
+        outline: none;
+        border-color: var(--green);
+        box-shadow: 0 0 0 3px rgba(69, 98, 73, 0.15);
+      }
+      .input-wrap.with-pre input {
+        padding-left: 1.6rem;
+      }
+      .input-wrap.with-suf input {
+        padding-right: 1.8rem;
+      }
+      .field.benchmark label {
+        font-weight: 500;
+        color: var(--text-sec);
+        font-size: 0.75rem;
+      }
+      .field.benchmark .input-wrap input {
+        background: var(--surface-alt);
+        border-style: dashed;
+        color: var(--text-sec);
+        font-weight: 500;
+        font-size: 0.85rem;
+      }
+      .field.benchmark .input-wrap input:focus {
+        border-style: solid;
+      }
+      .tip {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        background: var(--border);
+        color: var(--text-sec);
+        font-size: 0.6rem;
+        font-weight: 700;
+        cursor: help;
+        flex-shrink: 0;
+        position: relative;
+        font-style: normal;
+        transition: all 0.15s;
+      }
+      .tip:hover {
+        background: var(--green);
+        color: #fff;
+      }
+      .tip:hover::after {
+        content: attr(data-tip);
+        position: absolute;
+        bottom: calc(100% + 7px);
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--pri);
+        color: #fff;
+        padding: 0.5rem 0.75rem;
+        border-radius: var(--radius-sm);
+        font-size: 0.72rem;
+        font-weight: 400;
+        line-height: 1.4;
+        width: 240px;
+        z-index: 100;
+        box-shadow: var(--shadow-md);
+        pointer-events: none;
+        white-space: normal;
+        text-transform: none;
+        letter-spacing: 0;
+      }
+
+      /* ── Outputs ── */
+      .results {
+        background: var(--green-pale);
+        border-radius: var(--radius);
+        padding: 1.1rem 1.2rem;
+      }
+      .section-card:has(.section-head.meta) .results {
+        background: linear-gradient(135deg, #dceaed, #e8f1f3);
+      }
+      .section-card:has(.section-head.meta) .results h4 {
+        color: #3d7880 !important;
+      }
+      .section-card:has(.section-head.google) .results {
+        background: linear-gradient(135deg, #f7e8e2, #faf0eb);
+      }
+      .section-card:has(.section-head.google) .results h4 {
+        color: #8a3d28 !important;
+      }
+      .section-card:has(.section-head.email-head) .results {
+        background: linear-gradient(135deg, #e8f0e9, #eff5f0);
+      }
+      .section-card:has(.section-head.email-head) .results h4 {
+        color: var(--green-dark) !important;
+      }
+      .section-card:has(.section-head.tele-head) .results {
+        background: linear-gradient(135deg, #f3ecda, #f8f4ea);
+      }
+      .section-card:has(.section-head.tele-head) .results h4 {
+        color: #7a5e20 !important;
+      }
+
+      /* ── Result-item overrides for light-background panels ── */
+      .section-card:has(.section-head.meta) .result-item {
+        background: #b8cdd1;
+        border-color: rgba(61, 120, 128, 0.18);
+      }
+      .section-card:has(.section-head.meta) .result-label {
+        color: #3d7880;
+      }
+      .section-card:has(.section-head.meta) .result-value,
+      .section-card:has(.section-head.meta) .result-value.muted {
+        color: #2e5a62;
+      }
+
+      .sub-section .result-item {
+        background: #c8d8ca;
+        border-color: rgba(46, 66, 48, 0.18);
+      }
+      .sub-section .result-label {
+        color: var(--green);
+      }
+      .sub-section .result-value,
+      .sub-section .result-value.muted {
+        color: var(--green-dark);
+      }
+
+      .section-card:has(.section-head.google) .result-item {
+        background: #e3c9bc;
+        border-color: rgba(138, 61, 40, 0.18);
+      }
+      .section-card:has(.section-head.google) .result-label {
+        color: #9e5040;
+      }
+      .section-card:has(.section-head.google) .result-value,
+      .section-card:has(.section-head.google) .result-value.muted {
+        color: #7a3522;
+      }
+
+      .section-card:has(.section-head.email-head) .result-item {
+        background: #cddecf;
+        border-color: rgba(46, 66, 48, 0.18);
+      }
+      .section-card:has(.section-head.email-head) .result-label {
+        color: var(--green);
+      }
+      .section-card:has(.section-head.email-head) .result-value,
+      .section-card:has(.section-head.email-head) .result-value.muted {
+        color: var(--green-dark);
+      }
+
+      .section-card:has(.section-head.tele-head) .result-item {
+        background: #e4d5b5;
+        border-color: rgba(122, 94, 32, 0.18);
+      }
+      .section-card:has(.section-head.tele-head) .result-label {
+        color: #7a5e20;
+      }
+      .section-card:has(.section-head.tele-head) .result-value,
+      .section-card:has(.section-head.tele-head) .result-value.muted {
+        color: #5c4515;
+      }
+
+      .result-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+        gap: 0.5rem;
+      }
+      .result-item {
+        background: var(--surface);
+        border-radius: var(--radius-sm);
+        padding: 0.65rem 0.75rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+        border: 1px solid rgba(69, 98, 73, 0.12);
+      }
+      .result-label {
+        font-size: 0.62rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-sec);
+        margin-bottom: 0.2rem;
+      }
+      .result-value {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--green-dark);
+      }
+      .result-value.muted {
+        color: var(--text-sec);
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+
+      #panel-summary .results h4 {
+        color: #fff !important;
+      }
+      #panel-summary .kpi-value,
+      #panel-summary .kpi-value.green,
+      #panel-summary .kpi-value.red {
+        color: #fff;
+      }
+
+      /* ── Email retention / Direct costs (summary panel) ── */
+      .sub-section {
+        margin-bottom: 1.4rem;
+      }
+      .sub-section-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--text-sec);
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 0.4rem;
+        margin-bottom: 0.9rem;
+      }
+      .inline-field {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 0.55rem;
+        flex-wrap: wrap;
+      }
+      .inline-field label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text);
+        white-space: nowrap;
+      }
+      .inline-field .input-wrap {
+        width: 140px;
+        flex-shrink: 0;
+      }
+
+      /* ── Footnotes ── */
+      .footnotes {
+        margin-top: 1.4rem;
+        border-top: 1px solid var(--border);
+        padding-top: 0.9rem;
+      }
+      .footnotes p {
+        font-size: 0.72rem;
+        color: var(--text-sec);
+        line-height: 1.6;
+        margin-bottom: 0.3rem;
+      }
+
+      /* ── Print ── */
+      @media print {
+        body {
+          background: #fff;
+        }
+        .header {
+          background: var(--pri) !important;
+          -webkit-print-color-adjust: exact;
+        }
+        .tabs,
+        .tab {
+          display: none !important;
+        }
+        .panels {
+          border: none;
+          box-shadow: none;
+        }
+        .panel {
+          display: block !important;
+          page-break-before: always;
+        }
+        .panel:first-child {
+          page-break-before: avoid;
+        }
+      }
+
+      .results.meta .result-item {
+        background-color: var(--meta);
+      }
+
+      .results.meta .result-label {
+        color: #3d7880;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="header-inner">
+        <div>
+          <h1>Digital Marketing Projections 2026</h1>
+          <span class="header-sub"
+            >UK Charity Sector — Engagement, Lead Generation &amp;
+            Acquisition</span
+          >
+        </div>
+        <span class="badge">2026 Projections</span>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="tabs" id="tabs">
+        <button class="tab active" data-tab="engagement">
+          <span class="tab-type">Awareness</span>Upper/Mid Funnel
+        </button>
+        <button class="tab" data-tab="rg">
+          <span class="tab-type">Conversion</span>Regular Giving
+        </button>
+        <button class="tab" data-tab="cash">
+          <span class="tab-type">Conversion</span>Cash Acquisition
+        </button>
+        <button class="tab" data-tab="email">
+          <span class="tab-type">Lead Gen</span>Email Leads
+        </button>
+        <button class="tab" data-tab="telephone">
+          <span class="tab-type">Lead Gen</span>Telephone Leads
+        </button>
+        <button class="tab" data-tab="summary">
+          <span class="tab-type">Overview</span>Budget Summary
+        </button>
+      </div>
+
+      <div class="panels">
+        <!-- ══════════════════════════════════════════
+             PANEL 1: BUDGET SUMMARY
+        ══════════════════════════════════════════ -->
+        <div class="panel" id="panel-summary">
+          <div class="kpi-strip">
+            <div class="kpi">
+              <div class="kpi-label">Total Media Spend</div>
+              <div class="kpi-value" id="sc-media-spend">£0</div>
+              <div class="kpi-sub">All paid campaigns</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">Total Conversions</div>
+              <div class="kpi-value green" id="sc-total-conv">0</div>
+              <div class="kpi-sub">RG givers + cash gifts + sign-ups</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">Year 1 Campaign Income</div>
+              <div class="kpi-value green" id="sc-campaign-income">£0</div>
+              <div class="kpi-sub">From paid campaigns</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">Email Retention Income</div>
+              <div class="kpi-value green" id="sc-email-income">£0</div>
+              <div class="kpi-sub">From email programme</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">Grand Total Income</div>
+              <div class="kpi-value green" id="sc-grand-income">£0</div>
+              <div class="kpi-sub">Campaign + email retention</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">Overall ROAS</div>
+              <div class="kpi-value" id="sc-grand-roas">—</div>
+              <div class="kpi-sub">Grand income ÷ total spend</div>
+            </div>
+          </div>
+
+          <!-- Campaign table -->
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th style="min-width: 200px">Campaign</th>
+                  <th>Channel</th>
+                  <th>Media Fees</th>
+                  <th>Email Leads*</th>
+                  <th>Conversions</th>
+                  <th>CPA</th>
+                  <th>Year 1 Income*</th>
+                  <th>ROAS</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="row-group">
+                  <td colspan="8">UK — Active Engagement</td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="campaign-name">Active Engagement</span
+                    ><span class="campaign-product">Content</span>
+                  </td>
+                  <td><span class="badge-meta">Meta</span></td>
+                  <td id="sum-eng-fees">£0</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td>—</td>
+                </tr>
+
+                <tr class="row-group">
+                  <td colspan="8">UK — RG Acquisition</td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="campaign-name">Regular Giving</span
+                    ><span class="campaign-product">Acquisition</span>
+                  </td>
+                  <td><span class="badge-meta">Meta</span></td>
+                  <td id="sum-rgm-fees">£0</td>
+                  <td id="sum-rgm-emails">0</td>
+                  <td id="sum-rgm-conv">0</td>
+                  <td id="sum-rgm-cpa">—</td>
+                  <td id="sum-rgm-income">£0</td>
+                  <td id="sum-rgm-roas">—</td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="campaign-name">Regular Giving</span
+                    ><span class="campaign-product">Acquisition</span>
+                  </td>
+                  <td><span class="badge-google">Google</span></td>
+                  <td id="sum-rgg-fees">£0</td>
+                  <td id="sum-rgg-emails">0</td>
+                  <td id="sum-rgg-conv">0</td>
+                  <td id="sum-rgg-cpa">—</td>
+                  <td id="sum-rgg-income">£0</td>
+                  <td id="sum-rgg-roas">—</td>
+                </tr>
+
+                <tr class="row-group">
+                  <td colspan="8">UK — Cash Acquisition</td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="campaign-name">Cash</span
+                    ><span class="campaign-product">Acquisition</span>
+                  </td>
+                  <td><span class="badge-meta">Meta</span></td>
+                  <td id="sum-cm-fees">£0</td>
+                  <td id="sum-cm-emails">0</td>
+                  <td id="sum-cm-conv">0</td>
+                  <td id="sum-cm-cpa">—</td>
+                  <td id="sum-cm-income">£0</td>
+                  <td id="sum-cm-roas">—</td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="campaign-name">Incentivised Giving</span
+                    ><span class="campaign-product">Cash Acquisition</span>
+                  </td>
+                  <td><span class="badge-meta">Meta</span></td>
+                  <td id="sum-ci-fees">£0</td>
+                  <td id="sum-ci-emails">0</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="campaign-name">Cash</span
+                    ><span class="campaign-product">Acquisition</span>
+                  </td>
+                  <td><span class="badge-google">Google</span></td>
+                  <td id="sum-cg-fees">£0</td>
+                  <td id="sum-cg-emails">0</td>
+                  <td id="sum-cg-conv">0</td>
+                  <td id="sum-cg-cpa">—</td>
+                  <td id="sum-cg-income">£0</td>
+                  <td id="sum-cg-roas">—</td>
+                </tr>
+
+                <tr class="row-group">
+                  <td colspan="8">UK — Lead Generation</td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="campaign-name">Email Lead Generation</span
+                    ><span class="campaign-product">Cash / Value Exchange</span>
+                  </td>
+                  <td><span class="badge-meta">Meta</span></td>
+                  <td id="sum-el-fees">£0</td>
+                  <td id="sum-el-leads">0</td>
+                  <td id="sum-el-conv">0</td>
+                  <td id="sum-el-cpa">—</td>
+                  <td id="sum-el-income">£0</td>
+                  <td id="sum-el-roas">—</td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="campaign-name">Telephone Lead Generation</span
+                    ><span class="campaign-product">Value Exchange</span>
+                  </td>
+                  <td><span class="badge-meta">Meta</span></td>
+                  <td id="sum-tl-fees">£0</td>
+                  <td id="sum-tl-leads">0</td>
+                  <td id="sum-tl-conv">0</td>
+                  <td id="sum-tl-cpa">—</td>
+                  <td id="sum-tl-income">£0</td>
+                  <td id="sum-tl-roas">—</td>
+                </tr>
+
+                <tr class="row-subtotal">
+                  <td colspan="2">Sub-Total UK</td>
+                  <td id="sum-sub-fees">£0</td>
+                  <td id="sum-sub-emails">0</td>
+                  <td id="sum-sub-conv">0</td>
+                  <td id="sum-sub-cpa">—</td>
+                  <td id="sum-sub-income">£0</td>
+                  <td id="sum-sub-roas">—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Email retention -->
+          <div class="sub-section">
+            <div class="sub-section-title">Digital Retention through Email</div>
+            <div
+              style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem"
+            >
+              <div>
+                <div class="inline-field">
+                  <label>Your current email file size</label>
+                  <div class="input-wrap">
+                    <input
+                      type="number"
+                      id="inp-email-file"
+                      value="0"
+                      readonly
+                      style="
+                        background: var(--surface-alt);
+                        color: var(--text-sec);
+                      "
+                    />
+                  </div>
+                </div>
+                <div class="inline-field">
+                  <label>New emails (from campaigns)</label>
+                  <div class="input-wrap">
+                    <input
+                      type="number"
+                      id="sum-new-emails-disp"
+                      value="0"
+                      readonly
+                      style="
+                        background: var(--surface-alt);
+                        color: var(--text-sec);
+                      "
+                    />
+                  </div>
+                </div>
+                <div class="inline-field">
+                  <label>Total email file</label>
+                  <div class="input-wrap">
+                    <input
+                      type="number"
+                      id="sum-total-emails-disp"
+                      value="0"
+                      readonly
+                      style="
+                        background: var(--surface-alt);
+                        color: var(--text-sec);
+                      "
+                    />
+                  </div>
+                </div>
+                <div class="inline-field">
+                  <label>Emails sent per week</label>
+                  <div class="input-wrap">
+                    <input
+                      type="number"
+                      id="inp-emails-week"
+                      value="1"
+                      readonly
+                      style="
+                        background: var(--surface-alt);
+                        color: var(--text-sec);
+                      "
+                    />
+                  </div>
+                </div>
+                <div class="inline-field">
+                  <label>Total emails sent (year)</label>
+                  <div class="input-wrap">
+                    <input
+                      type="number"
+                      id="sum-total-sent-disp"
+                      value="0"
+                      readonly
+                      style="
+                        background: var(--surface-alt);
+                        color: var(--text-sec);
+                      "
+                    />
+                  </div>
+                </div>
+                <div class="inline-field">
+                  <label
+                    >Income per 1,000 emails sent
+                    <i
+                      class="tip"
+                      data-tip="Based on M+R Benchmarks UK and IRE 2025"
+                      >?</i
+                    ></label
+                  >
+                  <div class="input-wrap with-pre">
+                    <span class="pre">£</span
+                    ><input
+                      type="number"
+                      id="inp-income-1000"
+                      value="58"
+                      readonly
+                      style="
+                        background: var(--surface-alt);
+                        color: var(--text-sec);
+                      "
+                    />
+                  </div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center">
+                <div class="results" style="width: 100%">
+                  <h4 style="color: var(--green-dark)">
+                    Email Retention Output
+                  </h4>
+                  <div class="result-grid">
+                    <div class="result-item">
+                      <div class="result-label">Total Email Income</div>
+                      <div class="result-value" id="sum-email-ret-income">
+                        £0
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Direct costs -->
+          <div class="sub-section">
+            <div class="sub-section-title">
+              Direct Costs (Agency &amp; Operational Fees)
+            </div>
+            <div
+              style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem"
+            >
+              <div>
+                <div class="inline-field">
+                  <label>Acquisition Campaign — Agency Fees</label>
+                  <div class="input-wrap with-pre">
+                    <span class="pre">£</span
+                    ><input
+                      type="number"
+                      id="inp-cost-acq"
+                      value="0"
+                      readonly
+                      style="
+                        background: var(--surface-alt);
+                        color: var(--text-sec);
+                      "
+                    />
+                  </div>
+                </div>
+                <div class="inline-field">
+                  <label>Lead Generation Campaign — Agency Fees</label>
+                  <div class="input-wrap with-pre">
+                    <span class="pre">£</span
+                    ><input
+                      type="number"
+                      id="inp-cost-lead"
+                      value="0"
+                      readonly
+                      style="
+                        background: var(--surface-alt);
+                        color: var(--text-sec);
+                      "
+                    />
+                  </div>
+                </div>
+                <div class="inline-field">
+                  <label>Value Exchange Campaign — Agency Fees</label>
+                  <div class="input-wrap with-pre">
+                    <span class="pre">£</span
+                    ><input
+                      type="number"
+                      id="inp-cost-value"
+                      value="0"
+                      readonly
+                      style="
+                        background: var(--surface-alt);
+                        color: var(--text-sec);
+                      "
+                    />
+                  </div>
+                </div>
+                <div class="inline-field">
+                  <label>Google Ads — Agency Fees</label>
+                  <div class="input-wrap with-pre">
+                    <span class="pre">£</span
+                    ><input
+                      type="number"
+                      id="inp-cost-google"
+                      value="0"
+                      readonly
+                      style="
+                        background: var(--surface-alt);
+                        color: var(--text-sec);
+                      "
+                    />
+                  </div>
+                </div>
+                <div class="inline-field">
+                  <label>Telemarketing — Agency Fees</label>
+                  <div class="input-wrap with-pre">
+                    <span class="pre">£</span
+                    ><input
+                      type="number"
+                      id="sum-tm-agency-disp"
+                      value="0"
+                      readonly
+                      style="
+                        background: var(--surface-alt);
+                        color: var(--text-sec);
+                      "
+                    />
+                  </div>
+                </div>
+                <div class="inline-field">
+                  <label>Telemarketing — Calling Fees</label>
+                  <div class="input-wrap with-pre">
+                    <span class="pre">£</span
+                    ><input
+                      type="number"
+                      id="sum-tm-calling-disp"
+                      value="0"
+                      readonly
+                      style="
+                        background: var(--surface-alt);
+                        color: var(--text-sec);
+                      "
+                    />
+                  </div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center">
+                <div class="results" style="width: 100%">
+                  <h4 style="color: var(--green-dark)">Total Direct Costs</h4>
+                  <div class="result-grid">
+                    <div class="result-item">
+                      <div class="result-label">Direct Cost Sub-Total</div>
+                      <div class="result-value" id="sum-direct-total">
+                        £0
+                      </div>
+                    </div>
+                    <div class="result-item">
+                      <div class="result-label">Grand Total Spend</div>
+                      <div class="result-value" id="sum-grand-spend">
+                        £0
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="footnotes">
+            <p>
+              * Email Leads: assumes a 50% email opt-in rate on donor checkouts.
+              Email Lead Generation and Telephone Lead Generation assume 100%
+              opt-in.
+            </p>
+            <p>
+              * Year 1 Income assumes 100% retention and 12 months of
+              transactions. A retention curve can be overlaid if available.
+            </p>
+            <p>
+              * Income per Thousand Emails Sent is based on M+R Benchmarks UK
+              and IRE 2025 (£58).
+            </p>
+          </div>
+          <div class="panel-nav panel-nav--left">
+            <button class="panel-nav-btn prev" onclick="switchTab('telephone')">
+              &#8592; Previous
+            </button>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+             PANEL 2: UPPER/MIDDLE FUNNEL (Engagement)
+        ══════════════════════════════════════════ -->
+        <div class="panel active" id="panel-engagement">
+          <h2>Upper &amp; Middle Funnel — Active Engagement</h2>
+          <p
+            style="
+              font-size: 0.82rem;
+              color: var(--text-sec);
+              margin-bottom: 1.4rem;
+            "
+          >
+            Content / Meta · Awareness &amp; engagement campaign, not directly
+            conversion-focused.
+          </p>
+
+          <div class="section-card">
+            <div class="section-head meta">
+              Meta — Active Engagement / Content
+            </div>
+            <div class="section-body">
+              <div class="two-col">
+                <div>
+                  <h4>Budget Inputs</h4>
+                  <div class="field">
+                    <label>Monthly Spend</label>
+                    <div class="input-wrap with-pre">
+                      <span class="pre">£</span
+                      ><input
+                        type="number"
+                        id="inp-eng-monthly"
+                        value="0"
+                        min="0"
+                        step="100"
+                      />
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label>Months Live</label>
+                    <div class="input-wrap">
+                      <input
+                        type="number"
+                        id="inp-eng-months"
+                        value="12"
+                        min="1"
+                        max="12"
+                        step="1"
+                      />
+                    </div>
+                  </div>
+
+                  <h4 style="margin-top: 1rem">Performance Benchmarks</h4>
+                  <div class="field benchmark">
+                    <label
+                      >CPM (cost per 1,000 impressions)
+                      <i
+                        class="tip"
+                        data-tip="UK Meta benchmark for awareness/engagement content"
+                        >?</i
+                      ></label
+                    >
+                    <div class="input-wrap with-pre">
+                      <span class="pre">£</span
+                      ><input
+                        type="number"
+                        id="inp-eng-cpm"
+                        value="7.5"
+                        min="0"
+                        step=".5"
+                      />
+                    </div>
+                  </div>
+                  <div class="field benchmark">
+                    <label>CTR (click-through rate)</label>
+                    <div class="input-wrap with-suf">
+                      <span class="suf">%</span
+                      ><input
+                        type="number"
+                        id="inp-eng-ctr"
+                        value="0.1"
+                        min="0"
+                        step=".01"
+                      />
+                    </div>
+                  </div>
+                  <div class="field benchmark">
+                    <label
+                      >Engagement Rate (post engagements / impressions)</label
+                    >
+                    <div class="input-wrap with-suf">
+                      <span class="suf">%</span
+                      ><input
+                        type="number"
+                        id="inp-eng-engrate"
+                        value="2"
+                        min="0"
+                        step=".1"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="results meta">
+                    <h4 style="color: var(--green-dark)">Projected Outputs</h4>
+                    <div class="result-grid">
+                      <div class="result-item">
+                        <div class="result-label">Annual Media Fees</div>
+                        <div class="result-value" id="out-eng-fees">£0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Impressions</div>
+                        <div class="result-value" id="out-eng-imp">0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Link Clicks</div>
+                        <div class="result-value" id="out-eng-clicks">0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">CPC</div>
+                        <div class="result-value" id="out-eng-cpc">—</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Post Engagements</div>
+                        <div class="result-value" id="out-eng-eng">0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">CPE</div>
+                        <div class="result-value" id="out-eng-cpe">—</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel-nav panel-nav--right">
+            <button class="panel-nav-btn next" onclick="switchTab('rg')">
+              Next &#8594;
+            </button>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+             PANEL 3: CONVERSION — REGULAR GIVING
+        ══════════════════════════════════════════ -->
+        <div class="panel" id="panel-rg">
+          <h2>Conversion — Regular Giving (RG) Acquisition</h2>
+          <p
+            style="
+              font-size: 0.82rem;
+              color: var(--text-sec);
+              margin-bottom: 1.4rem;
+            "
+          >
+            Direct response campaigns driving regular gift sign-ups. Year 1
+            income = avg gift × givers × 12 months.
+          </p>
+
+          <!-- RG Meta -->
+          <div class="section-card">
+            <div class="section-head meta">
+              Meta — Regular Giving Acquisition
+            </div>
+            <div class="section-body">
+              <div class="two-col">
+                <div>
+                  <h4>Budget Inputs</h4>
+                  <div class="field">
+                    <label>Monthly Spend</label>
+                    <div class="input-wrap with-pre">
+                      <span class="pre">£</span
+                      ><input
+                        type="number"
+                        id="inp-rgm-monthly"
+                        value="0"
+                        min="0"
+                        step="100"
+                      />
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label
+                      >Months Live
+                      <span class="note">(January–December)</span></label
+                    >
+                    <div class="input-wrap">
+                      <input
+                        type="number"
+                        id="inp-rgm-months"
+                        value="12"
+                        min="1"
+                        max="12"
+                        step="1"
+                      />
+                    </div>
+                  </div>
+                  <h4 style="margin-top: 1rem">Performance Benchmarks</h4>
+                  <div class="field benchmark">
+                    <label
+                      >CPM
+                      <i
+                        class="tip"
+                        data-tip="UK Meta CPM benchmark for charity RG acquisition"
+                        >?</i
+                      ></label
+                    >
+                    <div class="input-wrap with-pre">
+                      <span class="pre">£</span
+                      ><input
+                        type="number"
+                        id="inp-rgm-cpm"
+                        value="18"
+                        min="0"
+                        step=".5"
+                      />
+                    </div>
+                  </div>
+                  <div class="field benchmark">
+                    <label>CTR</label>
+                    <div class="input-wrap with-suf">
+                      <span class="suf">%</span
+                      ><input
+                        type="number"
+                        id="inp-rgm-ctr"
+                        value="0.8"
+                        min="0"
+                        step=".05"
+                      />
+                    </div>
+                  </div>
+                  <div class="field benchmark">
+                    <label
+                      >Landing Page Conversion Rate
+                      <i
+                        class="tip"
+                        data-tip="% of landing page visitors who become regular givers"
+                        >?</i
+                      ></label
+                    >
+                    <div class="input-wrap with-suf">
+                      <span class="suf">%</span
+                      ><input
+                        type="number"
+                        id="inp-rgm-conv"
+                        value="0.75"
+                        min="0"
+                        step=".05"
+                      />
+                    </div>
+                  </div>
+                  <div class="field benchmark">
+                    <label>Average Regular Gift (monthly)</label>
+                    <div class="input-wrap with-pre">
+                      <span class="pre">£</span
+                      ><input
+                        type="number"
+                        id="inp-rgm-avg"
+                        value="7"
+                        min="0"
+                        step=".5"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div class="results meta">
+                    <h4 style="color: var(--green-dark)">Projected Outputs</h4>
+                    <div class="result-grid">
+                      <div class="result-item">
+                        <div class="result-label">Annual Fees</div>
+                        <div class="result-value" id="out-rgm-fees">£0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Impressions</div>
+                        <div class="result-value" id="out-rgm-imp">0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Link Clicks</div>
+                        <div class="result-value" id="out-rgm-clicks">0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">CPC</div>
+                        <div class="result-value" id="out-rgm-cpc">—</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Regular Givers</div>
+                        <div class="result-value" id="out-rgm-givers">
+                          0
+                        </div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Response Rate</div>
+                        <div class="result-value" id="out-rgm-rr">—</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Year 1 Income</div>
+                        <div class="result-value" id="out-rgm-income">
+                          £0
+                        </div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">CPA</div>
+                        <div class="result-value" id="out-rgm-cpa">—</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">ROAS</div>
+                        <div class="result-value" id="out-rgm-roas">—</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RG Google -->
+          <div class="section-card">
+            <div class="section-head google">
+              Google — Regular Giving Acquisition
+            </div>
+            <div class="section-body">
+              <div class="two-col">
+                <div>
+                  <h4>Budget Inputs</h4>
+                  <div class="field">
+                    <label>Monthly Spend</label>
+                    <div class="input-wrap with-pre">
+                      <span class="pre">£</span
+                      ><input
+                        type="number"
+                        id="inp-rgg-monthly"
+                        value="0"
+                        min="0"
+                        step="100"
+                      />
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label
+                      >Months Live
+                      <span class="note">(January–December)</span></label
+                    >
+                    <div class="input-wrap">
+                      <input
+                        type="number"
+                        id="inp-rgg-months"
+                        value="12"
+                        min="1"
+                        max="12"
+                        step="1"
+                      />
+                    </div>
+                  </div>
+                  <h4 style="margin-top: 1rem">Performance Benchmarks</h4>
+                  <div class="field benchmark">
+                    <label
+                      >CPM
+                      <i
+                        class="tip"
+                        data-tip="UK Google CPM benchmark for charity RG acquisition"
+                        >?</i
+                      ></label
+                    >
+                    <div class="input-wrap with-pre">
+                      <span class="pre">£</span
+                      ><input
+                        type="number"
+                        id="inp-rgg-cpm"
+                        value="6.5"
+                        min="0"
+                        step=".5"
+                      />
+                    </div>
+                  </div>
+                  <div class="field benchmark">
+                    <label>CTR</label>
+                    <div class="input-wrap with-suf">
+                      <span class="suf">%</span
+                      ><input
+                        type="number"
+                        id="inp-rgg-ctr"
+                        value="1.75"
+                        min="0"
+                        step=".05"
+                      />
+                    </div>
+                  </div>
+                  <div class="field benchmark">
+                    <label>Landing Page Conversion Rate</label>
+                    <div class="input-wrap with-suf">
+                      <span class="suf">%</span
+                      ><input
+                        type="number"
+                        id="inp-rgg-conv"
+                        value="0.75"
+                        min="0"
+                        step=".05"
+                      />
+                    </div>
+                  </div>
+                  <div class="field benchmark">
+                    <label>Average Regular Gift (monthly)</label>
+                    <div class="input-wrap with-pre">
+                      <span class="pre">£</span
+                      ><input
+                        type="number"
+                        id="inp-rgg-avg"
+                        value="7"
+                        min="0"
+                        step=".5"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div class="results">
+                    <h4 style="color: var(--green-dark)">Projected Outputs</h4>
+                    <div class="result-grid">
+                      <div class="result-item">
+                        <div class="result-label">Annual Fees</div>
+                        <div class="result-value" id="out-rgg-fees">£0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Impressions</div>
+                        <div class="result-value" id="out-rgg-imp">0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Link Clicks</div>
+                        <div class="result-value" id="out-rgg-clicks">0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">CPC</div>
+                        <div class="result-value" id="out-rgg-cpc">—</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Regular Givers</div>
+                        <div class="result-value" id="out-rgg-givers">
+                          0
+                        </div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Response Rate</div>
+                        <div class="result-value" id="out-rgg-rr">—</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Year 1 Income</div>
+                        <div class="result-value" id="out-rgg-income">
+                          £0
+                        </div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">CPA</div>
+                        <div class="result-value" id="out-rgg-cpa">—</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">ROAS</div>
+                        <div class="result-value" id="out-rgg-roas">—</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel-nav">
+            <button
+              class="panel-nav-btn prev"
+              onclick="switchTab('engagement')"
+            >
+              &#8592; Previous
+            </button>
+            <button class="panel-nav-btn next" onclick="switchTab('cash')">
+              Next &#8594;
+            </button>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+             PANEL 4: CONVERSION — CASH ACQUISITION
+        ══════════════════════════════════════════ -->
+        <div class="panel" id="panel-cash">
+          <h2>Conversion — Cash Acquisition</h2>
+          <p
+            style="
+              font-size: 0.82rem;
+              color: var(--text-sec);
+              margin-bottom: 1.4rem;
+            "
+          >
+            One-off cash donation campaigns. Income = avg gift × gifts (single
+            transaction, no ×12).
+          </p>
+
+          <!-- Cash Meta -->
+          <div class="section-card">
+            <div class="section-head meta">Meta — Cash Acquisition</div>
+            <div class="section-body">
+              <div class="two-col">
+                <div>
+                  <h4>Budget Inputs</h4>
+                  <div class="field">
+                    <label>Monthly Spend</label>
+                    <div class="input-wrap with-pre">
+                      <span class="pre">£</span
+                      ><input
+                        type="number"
+                        id="inp-cm-monthly"
+                        value="0"
+                        min="0"
+                        step="100"
+                      />
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label>Months Live</label>
+                    <div class="input-wrap">
+                      <input
+                        type="number"
+                        id="inp-cm-months"
+                        value="12"
+                        min="1"
+                        max="12"
+                      />
+                    </div>
+                  </div>
+                  <h4 style="margin-top: 1rem">Performance Benchmarks</h4>
+                  <div class="field benchmark">
+                    <label>CPM</label>
+                    <div class="input-wrap with-pre">
+                      <span class="pre">£</span
+                      ><input
+                        type="number"
+                        id="inp-cm-cpm"
+                        value="18"
+                        min="0"
+                        step=".5"
+                      />
+                    </div>
+                  </div>
+                  <div class="field benchmark">
+                    <label>CTR</label>
+                    <div class="input-wrap with-suf">
+                      <span class="suf">%</span
+                      ><input
+                        type="number"
+                        id="inp-cm-ctr"
+                        value="0.4"
+                        min="0"
+                        step=".05"
+                      />
+                    </div>
+                  </div>
+                  <div class="field benchmark">
+                    <label>Landing Page Conversion Rate</label>
+                    <div class="input-wrap with-suf">
+                      <span class="suf">%</span
+                      ><input
+                        type="number"
+                        id="inp-cm-conv"
+                        value="5"
+                        min="0"
+                        step=".5"
+                      />
+                    </div>
+                  </div>
+                  <div class="field benchmark">
+                    <label>Average Cash Gift</label>
+                    <div class="input-wrap with-pre">
+                      <span class="pre">£</span
+                      ><input
+                        type="number"
+                        id="inp-cm-avg"
+                        value="15"
+                        min="0"
+                        step="1"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div class="results meta">
+                    <h4 style="color: var(--green-dark)">Projected Outputs</h4>
+                    <div class="result-grid">
+                      <div class="result-item">
+                        <div class="result-label">Annual Fees</div>
+                        <div class="result-value" id="out-cm-fees">£0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Impressions</div>
+                        <div class="result-value" id="out-cm-imp">0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Link Clicks</div>
+                        <div class="result-value" id="out-cm-clicks">0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">CPC</div>
+                        <div class="result-value" id="out-cm-cpc">—</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Cash Gifts</div>
+                        <div class="result-value" id="out-cm-gifts">0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Cash Income</div>
+                        <div class="result-value" id="out-cm-income">
+                          £0
+                        </div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">CPA</div>
+                        <div class="result-value" id="out-cm-cpa">—</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">ROAS</div>
+                        <div class="result-value" id="out-cm-roas">—</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cash Incentivised Meta -->
+          <div class="section-card">
+            <div class="section-head meta">
+              Meta — Incentivised Giving (Cash Acquisition)
+            </div>
+            <div class="section-body">
+              <div class="two-col">
+                <div>
+                  <h4>Budget Inputs</h4>
+                  <div class="field">
+                    <label>Monthly Spend</label>
+                    <div class="input-wrap with-pre">
+                      <span class="pre">£</span
+                      ><input
+                        type="number"
+                        id="inp-ci-monthly"
+                        value="0"
+                        min="0"
+                        step="100"
+                      />
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label>Months Live</label>
+                    <div class="input-wrap">
+                      <input
+                        type="number"
+                        id="inp-ci-months"
+                        value="12"
+                        min="1"
+                        max="12"
+                      />
+                    </div>
+                  </div>
+                  <h4 style="margin-top: 1rem">Performance Benchmarks</h4>
+                  <div class="field benchmark">
+                    <label>CPM</label>
+                    <div class="input-wrap with-pre">
+                      <span class="pre">£</span
+                      ><input
+                        type="number"
+                        id="inp-ci-cpm"
+                        value="18"
+                        min="0"
+                        step=".5"
+                      />
+                    </div>
+                  </div>
+                  <div class="field benchmark">
+                    <label>CTR</label>
+                    <div class="input-wrap with-suf">
+                      <span class="suf">%</span
+                      ><input
+                        type="number"
+                        id="inp-ci-ctr"
+                        value="0.4"
+                        min="0"
+                        step=".05"
+                      />
+                    </div>
+                  </div>
+                  <div class="field benchmark">
+                    <label>Landing Page Conversion Rate</label>
+                    <div class="input-wrap with-suf">
+                      <span class="suf">%</span
+                      ><input
+                        type="number"
+                        id="inp-ci-conv"
+                        value="5"
+                        min="0"
+                        step=".5"
+                      />
+                    </div>
+                  </div>
+                  <div class="field benchmark">
+                    <label>Average Cash Gift</label>
+                    <div class="input-wrap with-pre">
+                      <span class="pre">£</span
+                      ><input
+                        type="number"
+                        id="inp-ci-avg"
+                        value="15"
+                        min="0"
+                        step="1"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div class="results meta">
+                    <h4 style="color: var(--green-dark)">Projected Outputs</h4>
+                    <div class="result-grid">
+                      <div class="result-item">
+                        <div class="result-label">Annual Fees</div>
+                        <div class="result-value" id="out-ci-fees">£0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Impressions</div>
+                        <div class="result-value" id="out-ci-imp">0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Link Clicks</div>
+                        <div class="result-value" id="out-ci-clicks">0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Cash Gifts</div>
+                        <div class="result-value" id="out-ci-gifts">0</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cash Google -->
+          <div class="section-card">
+            <div class="section-head google">Google — Cash Acquisition</div>
+            <div class="section-body">
+              <div class="two-col">
+                <div>
+                  <h4>Budget Inputs</h4>
+                  <div class="field">
+                    <label>Monthly Spend</label>
+                    <div class="input-wrap with-pre">
+                      <span class="pre">£</span
+                      ><input
+                        type="number"
+                        id="inp-cg-monthly"
+                        value="0"
+                        min="0"
+                        step="100"
+                      />
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label>Months Live</label>
+                    <div class="input-wrap">
+                      <input
+                        type="number"
+                        id="inp-cg-months"
+                        value="12"
+                        min="1"
+                        max="12"
+                      />
+                    </div>
+                  </div>
+                  <h4 style="margin-top: 1rem">Performance Benchmarks</h4>
+                  <div class="field benchmark">
+                    <label
+                      >CPM
+                      <i
+                        class="tip"
+                        data-tip="UK Google benchmark for cash acquisition"
+                        >?</i
+                      ></label
+                    >
+                    <div class="input-wrap with-pre">
+                      <span class="pre">£</span
+                      ><input
+                        type="number"
+                        id="inp-cg-cpm"
+                        value="10"
+                        min="0"
+                        step=".5"
+                      />
+                    </div>
+                  </div>
+                  <div class="field benchmark">
+                    <label>CTR</label>
+                    <div class="input-wrap with-suf">
+                      <span class="suf">%</span
+                      ><input
+                        type="number"
+                        id="inp-cg-ctr"
+                        value="1.75"
+                        min="0"
+                        step=".05"
+                      />
+                    </div>
+                  </div>
+                  <div class="field benchmark">
+                    <label>Landing Page Conversion Rate</label>
+                    <div class="input-wrap with-suf">
+                      <span class="suf">%</span
+                      ><input
+                        type="number"
+                        id="inp-cg-conv"
+                        value="5"
+                        min="0"
+                        step=".5"
+                      />
+                    </div>
+                  </div>
+                  <div class="field benchmark">
+                    <label>Average Cash Gift</label>
+                    <div class="input-wrap with-pre">
+                      <span class="pre">£</span
+                      ><input
+                        type="number"
+                        id="inp-cg-avg"
+                        value="15"
+                        min="0"
+                        step="1"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div class="results">
+                    <h4 style="color: var(--green-dark)">Projected Outputs</h4>
+                    <div class="result-grid">
+                      <div class="result-item">
+                        <div class="result-label">Annual Fees</div>
+                        <div class="result-value" id="out-cg-fees">£0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Impressions</div>
+                        <div class="result-value" id="out-cg-imp">0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Link Clicks</div>
+                        <div class="result-value" id="out-cg-clicks">0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">CPC</div>
+                        <div class="result-value" id="out-cg-cpc">—</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Cash Gifts</div>
+                        <div class="result-value" id="out-cg-gifts">0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Cash Income</div>
+                        <div class="result-value" id="out-cg-income">
+                          £0
+                        </div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">CPA</div>
+                        <div class="result-value" id="out-cg-cpa">—</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">ROAS</div>
+                        <div class="result-value" id="out-cg-roas">—</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel-nav">
+            <button class="panel-nav-btn prev" onclick="switchTab('rg')">
+              &#8592; Previous
+            </button>
+            <button class="panel-nav-btn next" onclick="switchTab('email')">
+              Next &#8594;
+            </button>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+             PANEL 5: EMAIL LEAD GENERATION
+        ══════════════════════════════════════════ -->
+        <div class="panel" id="panel-email">
+          <h2>Email Lead Generation</h2>
+          <p
+            style="
+              font-size: 0.82rem;
+              color: var(--text-sec);
+              margin-bottom: 1.4rem;
+            "
+          >
+            Meta lead form campaign capturing email opt-ins. A % of leads also
+            make an immediate cash gift on sign-up, annualised at ×12 months.
+          </p>
+
+          <div class="section-card">
+            <div class="section-head email-head">
+              Meta — Email Lead Generation / Cash
+            </div>
+            <div class="section-body">
+              <div class="two-col">
+                <div>
+                  <h4>Budget Inputs</h4>
+                  <div class="field">
+                    <label>Monthly Spend</label>
+                    <div class="input-wrap with-pre">
+                      <span class="pre">£</span
+                      ><input
+                        type="number"
+                        id="inp-el-monthly"
+                        value="0"
+                        min="0"
+                        step="100"
+                      />
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label>Months Live</label>
+                    <div class="input-wrap">
+                      <input
+                        type="number"
+                        id="inp-el-months"
+                        value="12"
+                        min="1"
+                        max="12"
+                      />
+                    </div>
+                  </div>
+                  <h4 style="margin-top: 1rem">Performance Benchmarks</h4>
+                  <div class="field benchmark">
+                    <label>CPM</label>
+                    <div class="input-wrap with-pre">
+                      <span class="pre">£</span
+                      ><input
+                        type="number"
+                        id="inp-el-cpm"
+                        value="6.5"
+                        min="0"
+                        step=".5"
+                      />
+                    </div>
+                  </div>
+                  <div class="field benchmark">
+                    <label>CTR</label>
+                    <div class="input-wrap with-suf">
+                      <span class="suf">%</span
+                      ><input
+                        type="number"
+                        id="inp-el-ctr"
+                        value="1"
+                        min="0"
+                        step=".05"
+                      />
+                    </div>
+                  </div>
+                  <div class="field benchmark">
+                    <label
+                      >Lead Form Conversion Rate
+                      <i
+                        class="tip"
+                        data-tip="% of link clicks who complete the lead form"
+                        >?</i
+                      ></label
+                    >
+                    <div class="input-wrap with-suf">
+                      <span class="suf">%</span
+                      ><input
+                        type="number"
+                        id="inp-el-leadconv"
+                        value="35"
+                        min="0"
+                        step="1"
+                      />
+                    </div>
+                  </div>
+                  <div class="field benchmark">
+                    <label
+                      >Donation on Sign-up Rate
+                      <i
+                        class="tip"
+                        data-tip="% of leads who make an immediate cash gift"
+                        >?</i
+                      ></label
+                    >
+                    <div class="input-wrap with-suf">
+                      <span class="suf">%</span
+                      ><input
+                        type="number"
+                        id="inp-el-donrate"
+                        value="0.5"
+                        min="0"
+                        step=".1"
+                      />
+                    </div>
+                  </div>
+                  <div class="field benchmark">
+                    <label>Average Gift (monthly, annualised)</label>
+                    <div class="input-wrap with-pre">
+                      <span class="pre">£</span
+                      ><input
+                        type="number"
+                        id="inp-el-avg"
+                        value="15"
+                        min="0"
+                        step="1"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div class="results">
+                    <h4 style="color: var(--green-dark)">Projected Outputs</h4>
+                    <div class="result-grid">
+                      <div class="result-item">
+                        <div class="result-label">Annual Fees</div>
+                        <div class="result-value" id="out-el-fees">£0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Impressions</div>
+                        <div class="result-value" id="out-el-imp">0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Link Clicks</div>
+                        <div class="result-value" id="out-el-clicks">0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">CPC</div>
+                        <div class="result-value" id="out-el-cpc">—</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Leads Captured</div>
+                        <div class="result-value" id="out-el-leads">0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">CPL</div>
+                        <div class="result-value" id="out-el-cpl">—</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Cash Gifts on Sign-up</div>
+                        <div class="result-value" id="out-el-gifts">0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Year 1 Income</div>
+                        <div class="result-value" id="out-el-income">
+                          £0
+                        </div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">CPA (per gift)</div>
+                        <div class="result-value" id="out-el-cpa">—</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">ROAS</div>
+                        <div class="result-value" id="out-el-roas">—</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel-nav">
+            <button class="panel-nav-btn prev" onclick="switchTab('cash')">
+              &#8592; Previous
+            </button>
+            <button class="panel-nav-btn next" onclick="switchTab('telephone')">
+              Next &#8594;
+            </button>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+             PANEL 6: TELEPHONE LEAD GENERATION
+        ══════════════════════════════════════════ -->
+        <div class="panel" id="panel-telephone">
+          <h2>Telephone Lead Generation</h2>
+          <p
+            style="
+              font-size: 0.82rem;
+              color: var(--text-sec);
+              margin-bottom: 1.4rem;
+            "
+          >
+            Meta lead form drives call centre contacts. Telemarketing converts
+            contacts to regular givers. Year 1 income = avg RG gift × givers ×
+            12 months.
+          </p>
+
+          <div class="section-card">
+            <div class="section-head tele-head">
+              Meta — Telephone Lead Generation / Value Exchange
+            </div>
+            <div class="section-body">
+              <div class="two-col">
+                <div>
+                  <h4>Media Budget</h4>
+                  <div class="field">
+                    <label>Monthly Spend</label>
+                    <div class="input-wrap with-pre">
+                      <span class="pre">£</span
+                      ><input
+                        type="number"
+                        id="inp-tl-monthly"
+                        value="0"
+                        min="0"
+                        step="100"
+                      />
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label
+                      >Months Live <span class="note">(Ongoing)</span></label
+                    >
+                    <div class="input-wrap">
+                      <input
+                        type="number"
+                        id="inp-tl-months"
+                        value="12"
+                        min="1"
+                        max="12"
+                      />
+                    </div>
+                  </div>
+
+                  <h4 style="margin-top: 1rem">Media Benchmarks</h4>
+                  <div class="field benchmark">
+                    <label>CPM</label>
+                    <div class="input-wrap with-pre">
+                      <span class="pre">£</span
+                      ><input
+                        type="number"
+                        id="inp-tl-cpm"
+                        value="6.5"
+                        min="0"
+                        step=".5"
+                      />
+                    </div>
+                  </div>
+                  <div class="field benchmark">
+                    <label>CTR</label>
+                    <div class="input-wrap with-suf">
+                      <span class="suf">%</span
+                      ><input
+                        type="number"
+                        id="inp-tl-ctr"
+                        value="1"
+                        min="0"
+                        step=".05"
+                      />
+                    </div>
+                  </div>
+                  <div class="field benchmark">
+                    <label>Lead Form Conversion Rate</label>
+                    <div class="input-wrap with-suf">
+                      <span class="suf">%</span
+                      ><input
+                        type="number"
+                        id="inp-tl-leadconv"
+                        value="37.5"
+                        min="0"
+                        step="1"
+                      />
+                    </div>
+                  </div>
+
+                  <h4 style="margin-top: 1rem">Telemarketing Inputs</h4>
+                  <div class="field benchmark">
+                    <label
+                      >Contact Rate
+                      <i
+                        class="tip"
+                        data-tip="% of leads successfully contacted by the call centre"
+                        >?</i
+                      ></label
+                    >
+                    <div class="input-wrap with-suf">
+                      <span class="suf">%</span
+                      ><input
+                        type="number"
+                        id="inp-tl-contact"
+                        value="30"
+                        min="0"
+                        step="1"
+                      />
+                    </div>
+                  </div>
+                  <div class="field benchmark">
+                    <label>Cost per Contact</label>
+                    <div class="input-wrap with-pre">
+                      <span class="pre">£</span
+                      ><input
+                        type="number"
+                        id="inp-tl-costcontact"
+                        value="6.94"
+                        min="0"
+                        step=".01"
+                      />
+                    </div>
+                  </div>
+                  <div class="field benchmark">
+                    <label>TM Agency Fees (annual)</label>
+                    <div class="input-wrap with-pre">
+                      <span class="pre">£</span
+                      ><input
+                        type="number"
+                        id="inp-tl-tmfees"
+                        value="1000"
+                        min="0"
+                        step="100"
+                      />
+                    </div>
+                  </div>
+                  <div class="field benchmark">
+                    <label
+                      >TM Conversion Rate
+                      <i
+                        class="tip"
+                        data-tip="% of contacts who become regular givers"
+                        >?</i
+                      ></label
+                    >
+                    <div class="input-wrap with-suf">
+                      <span class="suf">%</span
+                      ><input
+                        type="number"
+                        id="inp-tl-tmconv"
+                        value="10"
+                        min="0"
+                        step="1"
+                      />
+                    </div>
+                  </div>
+                  <div class="field benchmark">
+                    <label>Average Regular Gift (monthly)</label>
+                    <div class="input-wrap with-pre">
+                      <span class="pre">£</span
+                      ><input
+                        type="number"
+                        id="inp-tl-avg"
+                        value="6.50"
+                        min="0"
+                        step=".5"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div class="results">
+                    <h4 style="color: var(--green-dark)">Projected Outputs</h4>
+                    <div class="result-grid">
+                      <div class="result-item">
+                        <div class="result-label">Annual Media Fees</div>
+                        <div class="result-value" id="out-tl-fees">£0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Impressions</div>
+                        <div class="result-value" id="out-tl-imp">0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Link Clicks</div>
+                        <div class="result-value" id="out-tl-clicks">0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">CPC</div>
+                        <div class="result-value" id="out-tl-cpc">—</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Leads Captured</div>
+                        <div class="result-value" id="out-tl-leads">0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">CPL</div>
+                        <div class="result-value" id="out-tl-cpl">—</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Contacts Reached</div>
+                        <div class="result-value" id="out-tl-contacts">0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">TM Calling Fees</div>
+                        <div class="result-value" id="out-tl-callfees">£0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Total TM Fees</div>
+                        <div class="result-value" id="out-tl-tmtotal">£0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Regular Givers</div>
+                        <div class="result-value" id="out-tl-givers">0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Year 1 RG Income</div>
+                        <div class="result-value" id="out-tl-income">
+                          £0
+                        </div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Total Fees</div>
+                        <div class="result-value" id="out-tl-totalfees">£0</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">Total RG CPA</div>
+                        <div class="result-value" id="out-tl-totalcpa">—</div>
+                      </div>
+                      <div class="result-item">
+                        <div class="result-label">ROI</div>
+                        <div class="result-value" id="out-tl-roi">—</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel-nav">
+            <button class="panel-nav-btn prev" onclick="switchTab('email')">
+              &#8592; Previous
+            </button>
+            <button class="panel-nav-btn next" onclick="switchTab('summary')">
+              Next &#8594;
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- /panels -->
+    </main>
+
+    <script>
+      // ── Helpers ──
+      const $ = (id) => document.getElementById(id);
+      const v = (id) => parseFloat($(id).value) || 0;
+      const pct = (id) => v(id) / 100;
+      const safe = (n, d) => (d > 0 ? n / d : 0);
+      const fmt = (n) =>
+        '£' +
+        n.toLocaleString('en-GB', {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        });
+      const fmtD = (n) =>
+        '£' +
+        n.toLocaleString('en-GB', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+      const fmtN = (n) => Math.round(n).toLocaleString('en-GB');
+      const fmtP = (n) => (n * 100).toFixed(2) + '%';
+      const fmtR = (n) => (n > 0 ? n.toFixed(2) + 'x' : '—');
+      const set = (id, val) => {
+        const el = $(id);
+        if (el) el.textContent = val;
+      };
+      const setInp = (id, val) => {
+        const el = $(id);
+        if (el) el.value = Math.round(val);
+      };
+
+      function recalc() {
+        // ── ENGAGEMENT (Upper/Mid Funnel) ──
+        const engFees = v('inp-eng-monthly') * v('inp-eng-months');
+        const engImp =
+          v('inp-eng-cpm') > 0 ? (engFees / v('inp-eng-cpm')) * 1000 : 0;
+        const engClicks = pct('inp-eng-ctr') * engImp;
+        const engCpc = safe(engFees, engClicks);
+        const engEng = pct('inp-eng-engrate') * engImp;
+        const engCpe = safe(engFees, engEng);
+        set('out-eng-fees', fmt(engFees));
+        set('out-eng-imp', fmtN(engImp));
+        set('out-eng-clicks', fmtN(engClicks));
+        set('out-eng-cpc', engCpc > 0 ? fmtD(engCpc) : '—');
+        set('out-eng-eng', fmtN(engEng));
+        set('out-eng-cpe', engCpe > 0 ? fmtD(engCpe) : '—');
+
+        // ── RG META ──
+        const rgmFees = v('inp-rgm-monthly') * v('inp-rgm-months');
+        const rgmImp =
+          v('inp-rgm-cpm') > 0 ? (rgmFees / v('inp-rgm-cpm')) * 1000 : 0;
+        const rgmClicks = pct('inp-rgm-ctr') * rgmImp;
+        const rgmCpc = safe(rgmFees, rgmClicks);
+        const rgmGivers = pct('inp-rgm-conv') * rgmClicks;
+        const rgmRR = safe(rgmGivers, rgmImp);
+        const rgmIncome = v('inp-rgm-avg') * rgmGivers * 12;
+        const rgmCpa = safe(rgmFees, rgmGivers);
+        const rgmRoas = safe(rgmIncome, rgmFees);
+        set('out-rgm-fees', fmt(rgmFees));
+        set('out-rgm-imp', fmtN(rgmImp));
+        set('out-rgm-clicks', fmtN(rgmClicks));
+        set('out-rgm-cpc', rgmCpc > 0 ? fmtD(rgmCpc) : '—');
+        set('out-rgm-givers', fmtN(rgmGivers));
+        set('out-rgm-rr', rgmImp > 0 ? fmtP(rgmRR) : '—');
+        set('out-rgm-income', fmt(rgmIncome));
+        set('out-rgm-cpa', rgmCpa > 0 ? fmtD(rgmCpa) : '—');
+        set('out-rgm-roas', fmtR(rgmRoas));
+
+        // ── RG GOOGLE ──
+        const rggFees = v('inp-rgg-monthly') * v('inp-rgg-months');
+        const rggImp =
+          v('inp-rgg-cpm') > 0 ? (rggFees / v('inp-rgg-cpm')) * 1000 : 0;
+        const rggClicks = pct('inp-rgg-ctr') * rggImp;
+        const rggCpc = safe(rggFees, rggClicks);
+        const rggGivers = pct('inp-rgg-conv') * rggClicks;
+        const rggRR = safe(rggGivers, rggImp);
+        const rggIncome = v('inp-rgg-avg') * rggGivers * 12;
+        const rggCpa = safe(rggFees, rggGivers);
+        const rggRoas = safe(rggIncome, rggFees);
+        set('out-rgg-fees', fmt(rggFees));
+        set('out-rgg-imp', fmtN(rggImp));
+        set('out-rgg-clicks', fmtN(rggClicks));
+        set('out-rgg-cpc', rggCpc > 0 ? fmtD(rggCpc) : '—');
+        set('out-rgg-givers', fmtN(rggGivers));
+        set('out-rgg-rr', rggImp > 0 ? fmtP(rggRR) : '—');
+        set('out-rgg-income', fmt(rggIncome));
+        set('out-rgg-cpa', rggCpa > 0 ? fmtD(rggCpa) : '—');
+        set('out-rgg-roas', fmtR(rggRoas));
+
+        // ── CASH META ──
+        const cmFees = v('inp-cm-monthly') * v('inp-cm-months');
+        const cmImp =
+          v('inp-cm-cpm') > 0 ? (cmFees / v('inp-cm-cpm')) * 1000 : 0;
+        const cmClicks = pct('inp-cm-ctr') * cmImp;
+        const cmCpc = safe(cmFees, cmClicks);
+        const cmGifts = pct('inp-cm-conv') * cmClicks;
+        const cmIncome = v('inp-cm-avg') * cmGifts;
+        const cmCpa = safe(cmFees, cmGifts);
+        const cmRoas = safe(cmIncome, cmFees);
+        set('out-cm-fees', fmt(cmFees));
+        set('out-cm-imp', fmtN(cmImp));
+        set('out-cm-clicks', fmtN(cmClicks));
+        set('out-cm-cpc', cmCpc > 0 ? fmtD(cmCpc) : '—');
+        set('out-cm-gifts', fmtN(cmGifts));
+        set('out-cm-income', fmt(cmIncome));
+        set('out-cm-cpa', cmCpa > 0 ? fmtD(cmCpa) : '—');
+        set('out-cm-roas', fmtR(cmRoas));
+
+        // ── CASH INCENTIVISED META ──
+        const ciFees = v('inp-ci-monthly') * v('inp-ci-months');
+        const ciImp =
+          v('inp-ci-cpm') > 0 ? (ciFees / v('inp-ci-cpm')) * 1000 : 0;
+        const ciClicks = pct('inp-ci-ctr') * ciImp;
+        const ciGifts = pct('inp-ci-conv') * ciClicks;
+        set('out-ci-fees', fmt(ciFees));
+        set('out-ci-imp', fmtN(ciImp));
+        set('out-ci-clicks', fmtN(ciClicks));
+        set('out-ci-gifts', fmtN(ciGifts));
+
+        // ── CASH GOOGLE ──
+        const cgFees = v('inp-cg-monthly') * v('inp-cg-months');
+        const cgImp =
+          v('inp-cg-cpm') > 0 ? (cgFees / v('inp-cg-cpm')) * 1000 : 0;
+        const cgClicks = pct('inp-cg-ctr') * cgImp;
+        const cgCpc = safe(cgFees, cgClicks);
+        const cgGifts = pct('inp-cg-conv') * cgClicks;
+        const cgIncome = v('inp-cg-avg') * cgGifts;
+        const cgCpa = safe(cgFees, cgGifts);
+        const cgRoas = safe(cgIncome, cgFees);
+        set('out-cg-fees', fmt(cgFees));
+        set('out-cg-imp', fmtN(cgImp));
+        set('out-cg-clicks', fmtN(cgClicks));
+        set('out-cg-cpc', cgCpc > 0 ? fmtD(cgCpc) : '—');
+        set('out-cg-gifts', fmtN(cgGifts));
+        set('out-cg-income', fmt(cgIncome));
+        set('out-cg-cpa', cgCpa > 0 ? fmtD(cgCpa) : '—');
+        set('out-cg-roas', fmtR(cgRoas));
+
+        // ── EMAIL LEAD GEN ──
+        const elFees = v('inp-el-monthly') * v('inp-el-months');
+        const elImp =
+          v('inp-el-cpm') > 0 ? (elFees / v('inp-el-cpm')) * 1000 : 0;
+        const elClicks = pct('inp-el-ctr') * elImp;
+        const elCpc = safe(elFees, elClicks);
+        const elLeads = pct('inp-el-leadconv') * elClicks;
+        const elCpl = safe(elFees, elLeads);
+        const elGifts = pct('inp-el-donrate') * elLeads;
+        const elIncome = elGifts * v('inp-el-avg') * 12;
+        const elCpa = safe(elFees, elGifts);
+        const elRoas = safe(elIncome, elFees);
+        set('out-el-fees', fmt(elFees));
+        set('out-el-imp', fmtN(elImp));
+        set('out-el-clicks', fmtN(elClicks));
+        set('out-el-cpc', elCpc > 0 ? fmtD(elCpc) : '—');
+        set('out-el-leads', fmtN(elLeads));
+        set('out-el-cpl', elCpl > 0 ? fmtD(elCpl) : '—');
+        set('out-el-gifts', fmtN(elGifts));
+        set('out-el-income', fmt(elIncome));
+        set('out-el-cpa', elCpa > 0 ? fmtD(elCpa) : '—');
+        set('out-el-roas', fmtR(elRoas));
+
+        // ── TELEPHONE LEAD GEN ──
+        const tlFees = v('inp-tl-monthly') * v('inp-tl-months');
+        const tlImp =
+          v('inp-tl-cpm') > 0 ? (tlFees / v('inp-tl-cpm')) * 1000 : 0;
+        const tlClicks = pct('inp-tl-ctr') * tlImp;
+        const tlCpc = safe(tlFees, tlClicks);
+        const tlLeads = pct('inp-tl-leadconv') * tlClicks;
+        const tlCpl = safe(tlFees, tlLeads);
+        const tlContacts = pct('inp-tl-contact') * tlLeads;
+        const tlCallFees = v('inp-tl-costcontact') * tlContacts;
+        const tlAgency = v('inp-tl-tmfees');
+        const tlTmTotal = tlCallFees + tlAgency;
+        const tlGivers = pct('inp-tl-tmconv') * tlContacts;
+        const tlIncome = v('inp-tl-avg') * tlGivers * 12;
+        const tlTotalFees = tlTmTotal + tlFees;
+        const tlTotalCpa = safe(tlTotalFees, tlGivers);
+        const tlRoi = safe(tlIncome, tlTotalFees);
+        set('out-tl-fees', fmt(tlFees));
+        set('out-tl-imp', fmtN(tlImp));
+        set('out-tl-clicks', fmtN(tlClicks));
+        set('out-tl-cpc', tlCpc > 0 ? fmtD(tlCpc) : '—');
+        set('out-tl-leads', fmtN(tlLeads));
+        set('out-tl-cpl', tlCpl > 0 ? fmtD(tlCpl) : '—');
+        set('out-tl-contacts', fmtN(tlContacts));
+        set('out-tl-callfees', fmt(tlCallFees));
+        set('out-tl-tmtotal', fmt(tlTmTotal));
+        set('out-tl-givers', fmtN(tlGivers));
+        set('out-tl-income', fmt(tlIncome));
+        set('out-tl-totalfees', fmt(tlTotalFees));
+        set('out-tl-totalcpa', tlTotalCpa > 0 ? fmtD(tlTotalCpa) : '—');
+        set('out-tl-roi', fmtR(tlRoi));
+
+        // ── BUDGET SUMMARY ──
+        // Campaign rows
+        set('sum-eng-fees', fmt(engFees));
+
+        set('sum-rgm-fees', fmt(rgmFees));
+        set('sum-rgm-emails', fmtN(rgmGivers * 0.5));
+        set('sum-rgm-conv', fmtN(rgmGivers));
+        set('sum-rgm-cpa', rgmCpa > 0 ? fmtD(rgmCpa) : '—');
+        set('sum-rgm-income', fmt(rgmIncome));
+        set('sum-rgm-roas', fmtR(rgmRoas));
+
+        set('sum-rgg-fees', fmt(rggFees));
+        set('sum-rgg-emails', fmtN(rggGivers * 0.5));
+        set('sum-rgg-conv', fmtN(rggGivers));
+        set('sum-rgg-cpa', rggCpa > 0 ? fmtD(rggCpa) : '—');
+        set('sum-rgg-income', fmt(rggIncome));
+        set('sum-rgg-roas', fmtR(rggRoas));
+
+        set('sum-cm-fees', fmt(cmFees));
+        set('sum-cm-emails', fmtN(cmGifts * 0.5));
+        set('sum-cm-conv', fmtN(cmGifts));
+        set('sum-cm-cpa', cmCpa > 0 ? fmtD(cmCpa) : '—');
+        set('sum-cm-income', fmt(cmIncome));
+        set('sum-cm-roas', fmtR(cmRoas));
+
+        set('sum-ci-fees', fmt(ciFees));
+        set('sum-ci-emails', fmtN(ciGifts * 0.5));
+
+        set('sum-cg-fees', fmt(cgFees));
+        set('sum-cg-emails', fmtN(cgGifts * 0.5));
+        set('sum-cg-conv', fmtN(cgGifts));
+        set('sum-cg-cpa', cgCpa > 0 ? fmtD(cgCpa) : '—');
+        set('sum-cg-income', fmt(cgIncome));
+        set('sum-cg-roas', fmtR(cgRoas));
+
+        set('sum-el-fees', fmt(elFees));
+        set('sum-el-leads', fmtN(elLeads));
+        set('sum-el-conv', fmtN(elGifts));
+        set('sum-el-cpa', elCpa > 0 ? fmtD(elCpa) : '—');
+        set('sum-el-income', fmt(elIncome));
+        set('sum-el-roas', fmtR(elRoas));
+
+        set('sum-tl-fees', fmt(tlFees));
+        set('sum-tl-leads', fmtN(tlLeads));
+        set('sum-tl-conv', fmtN(tlGivers));
+        set('sum-tl-cpa', tlTotalCpa > 0 ? fmtD(tlTotalCpa) : '—');
+        set('sum-tl-income', fmt(tlIncome));
+        set('sum-tl-roas', fmtR(tlRoi));
+
+        // Sub-totals (media fees only, all campaigns incl. engagement)
+        const subMediaFees =
+          engFees +
+          rgmFees +
+          rggFees +
+          cmFees +
+          ciFees +
+          cgFees +
+          elFees +
+          tlFees;
+        const subEmails =
+          rgmGivers * 0.5 +
+          rggGivers * 0.5 +
+          cmGifts * 0.5 +
+          cgGifts * 0.5 +
+          elLeads +
+          tlLeads;
+        const subConv =
+          rgmGivers + rggGivers + cmGifts + cgGifts + elGifts + tlGivers;
+        const subCampaignIncome =
+          rgmIncome + rggIncome + cmIncome + cgIncome + elIncome + tlIncome;
+        const subCpa = safe(subMediaFees, subConv);
+        const subRoas = safe(subCampaignIncome, subMediaFees);
+        set('sum-sub-fees', fmt(subMediaFees));
+        set('sum-sub-emails', fmtN(subEmails));
+        set('sum-sub-conv', fmtN(subConv));
+        set('sum-sub-cpa', subCpa > 0 ? fmtD(subCpa) : '—');
+        set('sum-sub-income', fmt(subCampaignIncome));
+        set('sum-sub-roas', fmtR(subRoas));
+
+        // KPI strip (campaign-level)
+        set('sc-media-spend', fmt(subMediaFees));
+        set('sc-total-conv', fmtN(subConv));
+        set('sc-campaign-income', fmt(subCampaignIncome));
+
+        // Email retention
+        const emailFile = v('inp-email-file');
+        const newEmails = subEmails;
+        const totalEmails = emailFile + newEmails;
+        const emailsWeek = v('inp-emails-week');
+        // Apply xlsx scaling factors (0.8281 for list, 0.7909 for sends)
+        const scaledList = totalEmails * 0.8281;
+        const totalSent = scaledList * emailsWeek * 52 * 0.7909;
+        const emailIncome = (totalSent / 1000) * v('inp-income-1000');
+        setInp('sum-new-emails-disp', newEmails);
+        setInp('sum-total-emails-disp', totalEmails);
+        setInp('sum-total-sent-disp', totalSent);
+        set('sum-email-ret-income', fmt(emailIncome));
+
+        // Direct costs
+        const costAcq = v('inp-cost-acq');
+        const costLead = v('inp-cost-lead');
+        const costValue = v('inp-cost-value');
+        const costGoogle = v('inp-cost-google');
+        const directTotal =
+          costAcq + costLead + costValue + costGoogle + tlAgency + tlCallFees;
+        setInp('sum-tm-agency-disp', tlAgency);
+        setInp('sum-tm-calling-disp', tlCallFees);
+        set('sum-direct-total', fmt(directTotal));
+
+        const grandSpend = subMediaFees + directTotal;
+        const grandIncome = subCampaignIncome + emailIncome;
+        const grandRoas = safe(grandIncome, grandSpend);
+        set('sum-grand-spend', fmt(grandSpend));
+        set('sc-email-income', fmt(emailIncome));
+        set('sc-grand-income', fmt(grandIncome));
+        set('sc-grand-roas', fmtR(grandRoas));
+      }
+
+      // ── Tab switching ──
+      function switchTab(name) {
+        document
+          .querySelectorAll('.tab')
+          .forEach((t) => t.classList.remove('active'));
+        document
+          .querySelectorAll('.panel')
+          .forEach((p) => p.classList.remove('active'));
+        const tab = document.querySelector(`.tab[data-tab="${name}"]`);
+        if (tab) tab.classList.add('active');
+        const panel = $('panel-' + name);
+        if (panel) panel.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      document.querySelectorAll('.tab').forEach((tab) => {
+        tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+      });
+
+      // ── Wire all inputs ──
+      document.querySelectorAll('input[type="number"]').forEach((inp) => {
+        inp.addEventListener('input', recalc);
+      });
+
+      // ── Init ──
+      recalc();
+    </script>
+  </body>
+</html>
