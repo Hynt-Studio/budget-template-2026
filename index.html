@@ -148,6 +148,29 @@
         color: var(--text); cursor: pointer; transition: background 0.15s, color 0.15s;
       }
       .reset-btn:hover { background: var(--surface-alt); }
+      .header-actions { display: flex; align-items: center; gap: 0.6rem; }
+      .reset-btn:disabled { opacity: 0.55; cursor: progress; }
+
+      /* ── Export spinner overlay ── */
+      .spinner-overlay {
+        position: fixed; inset: 0; z-index: 1000;
+        display: none; align-items: center; justify-content: center;
+        background: rgba(0, 0, 0, 0.45);
+      }
+      .spinner-overlay.show { display: flex; }
+      .spinner-box {
+        background: #fff; border-radius: 14px; padding: 1.6rem 2rem;
+        display: flex; flex-direction: column; align-items: center; gap: 0.9rem;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+        font-family: inherit; color: var(--text);
+      }
+      .spinner {
+        width: 38px; height: 38px; border-radius: 50%;
+        border: 4px solid var(--border); border-top-color: var(--pri);
+        animation: spin 0.8s linear infinite;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      .spinner-text { font-size: 0.85rem; font-weight: 600; }
 
       /* ── Layout ── */
       .main {
@@ -768,7 +791,9 @@
         }
         .tabs,
         .tab,
-        .reset-btn {
+        .reset-btn,
+        .header-actions,
+        .spinner-overlay {
           display: none !important;
         }
         .panels {
@@ -794,10 +819,19 @@
     </style>
   </head>
   <body>
+    <div class="spinner-overlay" id="export-spinner">
+      <div class="spinner-box">
+        <div class="spinner"></div>
+        <div class="spinner-text">Generating Excel report…</div>
+      </div>
+    </div>
     <header class="header">
       <div class="header-inner">
         <h1>Digital Fundraising Budgeting Tool by Hynt</h1>
-        <button type="button" class="reset-btn" id="reset-btn">↺ Reset</button>
+        <div class="header-actions">
+          <button type="button" class="reset-btn" id="export-btn">⬇ Export to Excel</button>
+          <button type="button" class="reset-btn" id="reset-btn">↺ Reset</button>
+        </div>
       </div>
     </header>
 
@@ -2814,6 +2848,386 @@
         recalc();
       }
       $('reset-btn').addEventListener('click', resetAll);
+
+      // ══════════════════════════════════════════════════════════════
+      //  EXCEL EXPORT  (live formulas — mirrors recalc() exactly)
+      // ══════════════════════════════════════════════════════════════
+
+      // ── Lazy-load SheetJS (lightweight build) from CDN on demand ──
+      let xlsxPromise = null;
+      function loadSheetJS() {
+        if (window.XLSX) return Promise.resolve(window.XLSX);
+        if (xlsxPromise) return xlsxPromise;
+        xlsxPromise = new Promise((resolve, reject) => {
+          const s = document.createElement('script');
+          s.src =
+            'https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.mini.min.js';
+          s.onload = () =>
+            window.XLSX
+              ? resolve(window.XLSX)
+              : reject(new Error('Excel library loaded but unavailable.'));
+          s.onerror = () => {
+            xlsxPromise = null;
+            reject(new Error('Failed to download the Excel library.'));
+          };
+          document.head.appendChild(s);
+        });
+        return xlsxPromise;
+      }
+
+      // ── Excel number formats ──
+      const FMT = {
+        CUR: '"£"#,##0',
+        CUR2: '"£"#,##0.00',
+        COUNT: '#,##0',
+        INT: '0',
+        DEC: '0.00',
+        PCT: '0.00%',
+        RATIO: '0.00"x"',
+      };
+
+      // ── Tiny worksheet builder (cell-addressed) ──
+      function colLetter(c) {
+        let s = '';
+        c++;
+        while (c > 0) {
+          const m = (c - 1) % 26;
+          s = String.fromCharCode(65 + m) + s;
+          c = Math.floor((c - 1) / 26);
+        }
+        return s;
+      }
+      const cellAddr = (r, c) => colLetter(c) + (r + 1); // 0-based r,c
+      function makeSheet() {
+        return { cells: {}, maxR: 0, maxC: 0 };
+      }
+      function put(sh, r, c, cell) {
+        sh.cells[cellAddr(r, c)] = cell;
+        if (r > sh.maxR) sh.maxR = r;
+        if (c > sh.maxC) sh.maxC = c;
+      }
+      const txt = (val) => ({ t: 's', v: String(val) });
+      const numV = (val, z) => {
+        const c = { t: 'n', v: Number(val) || 0 };
+        if (z) c.z = z;
+        return c;
+      };
+      const numF = (f, z) => {
+        const c = { t: 'n', f: f };
+        if (z) c.z = z;
+        return c;
+      };
+      function finalizeSheet(sh) {
+        const ws = sh.cells;
+        ws['!ref'] = 'A1:' + cellAddr(sh.maxR, sh.maxC);
+        ws['!cols'] = [
+          { wch: 36 },
+          { wch: 16 },
+          { wch: 14 },
+          { wch: 14 },
+          { wch: 14 },
+          { wch: 16 },
+          { wch: 10 },
+        ];
+        return ws;
+      }
+
+      // ── Declarative campaign config ──
+      // f: function(ref) -> Excel formula string (no leading '='),
+      //    where ref(key) resolves to the same-sheet cell address.
+      const baseInputs = (p) => [
+        { k: 'monthly', id: `inp-${p}-monthly`, label: 'Monthly Spend', z: FMT.CUR },
+        { k: 'months', id: `inp-${p}-months`, label: 'Months Live', z: FMT.INT },
+        { k: 'cpm', id: `inp-${p}-cpm`, label: 'CPM (Cost per 1,000 Impressions)', z: FMT.CUR2 },
+        { k: 'ctr', id: `inp-${p}-ctr`, label: 'CTR (Click-Through Rate) %', z: FMT.DEC },
+      ];
+      const baseOutputs = () => [
+        { k: 'fees', label: 'Annual Media Spend', z: FMT.CUR, f: (r) => `${r('monthly')}*${r('months')}` },
+        { k: 'imp', label: 'Impressions', z: FMT.COUNT, f: (r) => `IF(${r('cpm')}>0,${r('fees')}/${r('cpm')}*1000,0)` },
+        { k: 'clicks', label: 'Link Clicks', z: FMT.COUNT, f: (r) => `${r('ctr')}/100*${r('imp')}` },
+        { k: 'cpc', label: 'Cost Per Click', z: FMT.CUR2, f: (r) => `IF(${r('clicks')}>0,${r('fees')}/${r('clicks')},0)` },
+      ];
+      const rgConfig = (key, title, p) => ({
+        key,
+        title,
+        inputs: [
+          ...baseInputs(p),
+          { k: 'conv', id: `inp-${p}-conv`, label: 'Conversion Rate %', z: FMT.DEC },
+          { k: 'avg', id: `inp-${p}-avg`, label: 'Average Monthly Gift (£)', z: FMT.CUR2 },
+        ],
+        outputs: [
+          ...baseOutputs(),
+          { k: 'givers', label: 'Regular Givers', z: FMT.COUNT, f: (r) => `${r('conv')}/100*${r('clicks')}` },
+          { k: 'rr', label: 'Response Rate', z: FMT.PCT, f: (r) => `IF(${r('imp')}>0,${r('givers')}/${r('imp')},0)` },
+          { k: 'income', label: 'Year 1 Income', z: FMT.CUR, f: (r) => `${r('avg')}*${r('givers')}*12` },
+          { k: 'cpa', label: 'Cost per Acquisition', z: FMT.CUR2, f: (r) => `IF(${r('givers')}>0,${r('fees')}/${r('givers')},0)` },
+          { k: 'roas', label: 'ROAS (Return On Ad Spend)', z: FMT.RATIO, f: (r) => `IF(${r('fees')}>0,${r('income')}/${r('fees')},0)` },
+        ],
+      });
+      const cashConfig = (key, title, p) => ({
+        key,
+        title,
+        inputs: [
+          ...baseInputs(p),
+          { k: 'conv', id: `inp-${p}-conv`, label: 'Conversion Rate %', z: FMT.DEC },
+          { k: 'avg', id: `inp-${p}-avg`, label: 'Average Gift (£)', z: FMT.CUR2 },
+        ],
+        outputs: [
+          ...baseOutputs(),
+          { k: 'gifts', label: 'Cash Gifts', z: FMT.COUNT, f: (r) => `${r('conv')}/100*${r('clicks')}` },
+          { k: 'income', label: 'Income', z: FMT.CUR, f: (r) => `${r('avg')}*${r('gifts')}` },
+          { k: 'cpa', label: 'Cost per Acquisition', z: FMT.CUR2, f: (r) => `IF(${r('gifts')}>0,${r('fees')}/${r('gifts')},0)` },
+          { k: 'roas', label: 'ROAS (Return On Ad Spend)', z: FMT.RATIO, f: (r) => `IF(${r('fees')}>0,${r('income')}/${r('fees')},0)` },
+        ],
+      });
+      const CAMPAIGNS = [
+        {
+          key: 'eng',
+          title: 'Engagement',
+          inputs: [
+            ...baseInputs('eng'),
+            { k: 'engrate', id: 'inp-eng-engrate', label: 'Engagement Rate %', z: FMT.DEC },
+          ],
+          outputs: [
+            ...baseOutputs(),
+            { k: 'eng', label: 'Post Engagements', z: FMT.COUNT, f: (r) => `${r('engrate')}/100*${r('imp')}` },
+            { k: 'cpe', label: 'Cost per Engagement', z: FMT.CUR2, f: (r) => `IF(${r('eng')}>0,${r('fees')}/${r('eng')},0)` },
+          ],
+        },
+        rgConfig('rgm', 'Regular Giving — Meta', 'rgm'),
+        rgConfig('rgg', 'Regular Giving — Google', 'rgg'),
+        cashConfig('cm', 'Cash — Meta', 'cm'),
+        cashConfig('cg', 'Cash — Google', 'cg'),
+        {
+          key: 'el',
+          title: 'Email Lead Generation',
+          inputs: [
+            ...baseInputs('el'),
+            { k: 'leadconv', id: 'inp-el-leadconv', label: 'Lead Conversion Rate %', z: FMT.DEC },
+            { k: 'donrate', id: 'inp-el-donrate', label: 'Lead-to-Donor Rate %', z: FMT.DEC },
+            { k: 'avg', id: 'inp-el-avg', label: 'Average Monthly Gift (£)', z: FMT.CUR2 },
+          ],
+          outputs: [
+            ...baseOutputs(),
+            { k: 'leads', label: 'Leads', z: FMT.COUNT, f: (r) => `${r('leadconv')}/100*${r('clicks')}` },
+            { k: 'cpl', label: 'Cost per Lead', z: FMT.CUR2, f: (r) => `IF(${r('leads')}>0,${r('fees')}/${r('leads')},0)` },
+            { k: 'gifts', label: 'Donors', z: FMT.COUNT, f: (r) => `${r('donrate')}/100*${r('leads')}` },
+            { k: 'income', label: 'Year 1 Income', z: FMT.CUR, f: (r) => `${r('gifts')}*${r('avg')}*12` },
+            { k: 'cpa', label: 'Cost per Acquisition', z: FMT.CUR2, f: (r) => `IF(${r('gifts')}>0,${r('fees')}/${r('gifts')},0)` },
+            { k: 'roas', label: 'ROAS (Return On Ad Spend)', z: FMT.RATIO, f: (r) => `IF(${r('fees')}>0,${r('income')}/${r('fees')},0)` },
+          ],
+        },
+        {
+          key: 'tl',
+          title: 'Telephone Lead Generation',
+          inputs: [
+            ...baseInputs('tl'),
+            { k: 'leadconv', id: 'inp-tl-leadconv', label: 'Lead Conversion Rate %', z: FMT.DEC },
+            { k: 'contact', id: 'inp-tl-contact', label: 'Contact Rate %', z: FMT.DEC },
+            { k: 'costcontact', id: 'inp-tl-costcontact', label: 'Cost per Contact (£)', z: FMT.CUR2 },
+            { k: 'tmfees', id: 'inp-tl-tmfees', label: 'Telemarketing Agency Fees (£)', z: FMT.CUR },
+            { k: 'tmconv', id: 'inp-tl-tmconv', label: 'TM Conversion Rate %', z: FMT.DEC },
+            { k: 'avg', id: 'inp-tl-avg', label: 'Average Monthly Gift (£)', z: FMT.CUR2 },
+          ],
+          outputs: [
+            ...baseOutputs(),
+            { k: 'leads', label: 'Leads', z: FMT.COUNT, f: (r) => `${r('leadconv')}/100*${r('clicks')}` },
+            { k: 'cpl', label: 'Cost per Lead', z: FMT.CUR2, f: (r) => `IF(${r('leads')}>0,${r('fees')}/${r('leads')},0)` },
+            { k: 'contacts', label: 'Contacts Made', z: FMT.COUNT, f: (r) => `${r('contact')}/100*${r('leads')}` },
+            { k: 'callFees', label: 'Calling Fees', z: FMT.CUR, f: (r) => `${r('costcontact')}*${r('contacts')}` },
+            { k: 'agency', label: 'Agency Fees', z: FMT.CUR, f: (r) => `${r('tmfees')}` },
+            { k: 'tmTotal', label: 'Total Telemarketing Fees', z: FMT.CUR, f: (r) => `${r('callFees')}+${r('agency')}` },
+            { k: 'givers', label: 'Regular Givers', z: FMT.COUNT, f: (r) => `${r('tmconv')}/100*${r('contacts')}` },
+            { k: 'income', label: 'Year 1 Income', z: FMT.CUR, f: (r) => `${r('avg')}*${r('givers')}*12` },
+            { k: 'totalFees', label: 'Total Fees (Media + TM)', z: FMT.CUR, f: (r) => `${r('tmTotal')}+${r('fees')}` },
+            { k: 'totalCpa', label: 'Total Cost per Acquisition', z: FMT.CUR2, f: (r) => `IF(${r('givers')}>0,${r('totalFees')}/${r('givers')},0)` },
+            { k: 'roi', label: 'ROI (Return On Investment)', z: FMT.RATIO, f: (r) => `IF(${r('totalFees')}>0,${r('income')}/${r('totalFees')},0)` },
+          ],
+        },
+      ];
+
+      // ── Build one campaign sheet; record qualified cell refs in `refs` ──
+      function buildCampaignSheet(camp, refs) {
+        const sh = makeSheet();
+        const local = {}; // fieldKey -> 'B5'
+        let r = 0;
+        put(sh, r, 0, txt(camp.title));
+        r += 2;
+        put(sh, r, 0, txt('Inputs (editable)'));
+        r++;
+        camp.inputs.forEach((fld) => {
+          put(sh, r, 0, txt(fld.label));
+          put(sh, r, 1, numV(v(fld.id), fld.z));
+          local[fld.k] = cellAddr(r, 1);
+          r++;
+        });
+        r++; // blank spacer
+        put(sh, r, 0, txt('Projected Outputs'));
+        r++;
+        const ref = (k) => local[k];
+        camp.outputs.forEach((fld) => {
+          put(sh, r, 0, txt(fld.label));
+          put(sh, r, 1, numF(fld.f(ref), fld.z));
+          local[fld.k] = cellAddr(r, 1);
+          r++;
+        });
+        const q = {};
+        Object.keys(local).forEach((k) => {
+          q[k] = `'${camp.title}'!${local[k]}`;
+        });
+        refs[camp.key] = q;
+        return finalizeSheet(sh);
+      }
+
+      // ── Build the Budget Summary sheet (cross-sheet formulas) ──
+      function buildSummarySheet(refs) {
+        const sh = makeSheet();
+        const SR = (camp, k) => refs[camp][k];
+        let r = 0;
+        put(sh, r, 0, txt('Budget Summary'));
+        r += 2;
+        ['Campaign', 'Media Spend', 'New Emails', 'Conversions', 'CPA', 'Year 1 Income', 'ROAS'].forEach(
+          (h, c) => put(sh, r, c, txt(h))
+        );
+        r++;
+        const rows = [
+          { name: 'Engagement', camp: 'eng', engOnly: true },
+          { name: 'Regular Giving — Meta', camp: 'rgm', emails: () => `${SR('rgm', 'givers')}*0.5`, conv: 'givers', cpa: 'cpa', roas: 'roas' },
+          { name: 'Regular Giving — Google', camp: 'rgg', emails: () => `${SR('rgg', 'givers')}*0.5`, conv: 'givers', cpa: 'cpa', roas: 'roas' },
+          { name: 'Cash — Meta', camp: 'cm', emails: () => `${SR('cm', 'gifts')}*0.5`, conv: 'gifts', cpa: 'cpa', roas: 'roas' },
+          { name: 'Cash — Google', camp: 'cg', emails: () => `${SR('cg', 'gifts')}*0.5`, conv: 'gifts', cpa: 'cpa', roas: 'roas' },
+          { name: 'Email Lead Generation', camp: 'el', emails: () => `${SR('el', 'leads')}`, conv: 'gifts', cpa: 'cpa', roas: 'roas' },
+          { name: 'Telephone Lead Generation', camp: 'tl', emails: () => `${SR('tl', 'leads')}`, conv: 'givers', cpa: 'totalCpa', roas: 'roi' },
+        ];
+        const firstRow = r;
+        rows.forEach((row) => {
+          put(sh, r, 0, txt(row.name));
+          put(sh, r, 1, numF(SR(row.camp, 'fees'), FMT.CUR));
+          if (!row.engOnly) {
+            put(sh, r, 2, numF(row.emails(), FMT.COUNT));
+            put(sh, r, 3, numF(SR(row.camp, row.conv), FMT.COUNT));
+            put(sh, r, 4, numF(SR(row.camp, row.cpa), FMT.CUR2));
+            put(sh, r, 5, numF(SR(row.camp, 'income'), FMT.CUR));
+            put(sh, r, 6, numF(SR(row.camp, row.roas), FMT.RATIO));
+          }
+          r++;
+        });
+        const lastRow = r - 1;
+        const range = (c) => `SUM(${colLetter(c)}${firstRow + 1}:${colLetter(c)}${lastRow + 1})`;
+        put(sh, r, 0, txt('Sub-total (Media)'));
+        put(sh, r, 1, numF(range(1), FMT.CUR));
+        put(sh, r, 2, numF(range(2), FMT.COUNT));
+        put(sh, r, 3, numF(range(3), FMT.COUNT));
+        const subSpend = cellAddr(r, 1);
+        const subEmails = cellAddr(r, 2);
+        const subConv = cellAddr(r, 3);
+        put(sh, r, 4, numF(`IF(${subConv}>0,${subSpend}/${subConv},0)`, FMT.CUR2));
+        put(sh, r, 5, numF(range(5), FMT.CUR));
+        const subIncome = cellAddr(r, 5);
+        put(sh, r, 6, numF(`IF(${subSpend}>0,${subIncome}/${subSpend},0)`, FMT.RATIO));
+        r += 2;
+
+        // Email retention
+        const row2 = (label, cell) => {
+          put(sh, r, 0, txt(label));
+          put(sh, r, 1, cell);
+          const a = cellAddr(r, 1);
+          r++;
+          return a;
+        };
+        put(sh, r, 0, txt('Digital Retention through Email'));
+        r++;
+        const emailFile = row2('Current email file size', numV(v('inp-email-file'), FMT.COUNT));
+        const newEmails = row2('New emails acquired (from campaigns)', numF(`${subEmails}`, FMT.COUNT));
+        const totalEmails = row2('Total email file', numF(`${emailFile}+${newEmails}`, FMT.COUNT));
+        const week = row2('Emails sent per week', numV(v('inp-emails-week'), FMT.INT));
+        const scaledList = row2('Scaled active list (×0.8281)', numF(`${totalEmails}*0.8281`, FMT.COUNT));
+        const totalSent = row2('Total emails sent (year)', numF(`${scaledList}*${week}*52*0.7909`, FMT.COUNT));
+        const inc1000 = row2('Income per 1,000 emails sent', numV(v('inp-income-1000'), FMT.CUR2));
+        const emailIncome = row2('Email Retention Income', numF(`${totalSent}/1000*${inc1000}`, FMT.CUR));
+        r++;
+
+        // Direct costs
+        put(sh, r, 0, txt('Direct Costs (Agency & Operational Fees)'));
+        r++;
+        const cAcq = row2('Acquisition Campaign — Agency Fees', numV(v('inp-cost-acq'), FMT.CUR));
+        const cLead = row2('Lead Generation Campaign — Agency Fees', numV(v('inp-cost-lead'), FMT.CUR));
+        const cValue = row2('Value Exchange Campaign — Agency Fees', numV(v('inp-cost-value'), FMT.CUR));
+        const cGoogle = row2('Google Ads — Agency Fees', numV(v('inp-cost-google'), FMT.CUR));
+        const cTmA = row2('Telemarketing — Agency Fees', numF(`${SR('tl', 'agency')}`, FMT.CUR));
+        const cTmC = row2('Telemarketing — Calling Fees', numF(`${SR('tl', 'callFees')}`, FMT.CUR));
+        const directTotal = row2(
+          'Total Direct Costs',
+          numF(`${cAcq}+${cLead}+${cValue}+${cGoogle}+${cTmA}+${cTmC}`, FMT.CUR)
+        );
+        r++;
+
+        // Grand totals
+        put(sh, r, 0, txt('Overall Totals'));
+        r++;
+        row2('Total Media Spend', numF(`${subSpend}`, FMT.CUR));
+        row2('Total Direct Costs', numF(`${directTotal}`, FMT.CUR));
+        const grandSpend = row2(
+          'Total Agency, Operational & Media Spend',
+          numF(`${subSpend}+${directTotal}`, FMT.CUR)
+        );
+        row2('Year 1 Campaign Income', numF(`${subIncome}`, FMT.CUR));
+        row2('Email Retention Income', numF(`${emailIncome}`, FMT.CUR));
+        const grandIncome = row2(
+          'Overall Year 1 Income',
+          numF(`${subIncome}+${emailIncome}`, FMT.CUR)
+        );
+        row2('Overall ROAS', numF(`IF(${grandSpend}>0,${grandIncome}/${grandSpend},0)`, FMT.RATIO));
+
+        return finalizeSheet(sh);
+      }
+
+      function buildWorkbook(XLSX) {
+        const refs = {};
+        const campSheets = CAMPAIGNS.map((c) => ({
+          name: c.title,
+          ws: buildCampaignSheet(c, refs),
+        }));
+        const summaryWs = buildSummarySheet(refs);
+        const wb = XLSX.utils.book_new();
+        // Force a full recalculation when the file is opened so all
+        // formula cells display computed values immediately.
+        wb.Workbook = { CalcPr: { fullCalcOnLoad: true } };
+        XLSX.utils.book_append_sheet(wb, summaryWs, 'Budget Summary');
+        campSheets.forEach((o) => XLSX.utils.book_append_sheet(wb, o.ws, o.name));
+        return wb;
+      }
+
+      // ── Spinner + export trigger ──
+      const showSpinner = () => {
+        $('export-spinner').classList.add('show');
+        $('export-btn').disabled = true;
+      };
+      const hideSpinner = () => {
+        $('export-spinner').classList.remove('show');
+        $('export-btn').disabled = false;
+      };
+      async function exportExcel() {
+        showSpinner();
+        try {
+          const XLSX = await loadSheetJS();
+          const wb = buildWorkbook(XLSX);
+          const name = `Hynt-Digital-Fundraising-Plan-${new Date()
+            .toISOString()
+            .slice(0, 10)}.xlsx`;
+          XLSX.writeFile(wb, name);
+        } catch (e) {
+          console.error(e);
+          alert(
+            'Could not generate the Excel file.\n\n' +
+              (e && e.message ? e.message + '\n\n' : '') +
+              'If you are offline, the Excel library could not be downloaded — please check your internet connection and try again.'
+          );
+        } finally {
+          hideSpinner();
+        }
+      }
+      $('export-btn').addEventListener('click', exportExcel);
 
       // ── Init ──
       recalc();
