@@ -2547,6 +2547,56 @@
         if (el) el.value = Math.round(val);
       };
 
+      // ── Persistence (localStorage) ──
+      // See AGENTS.md. Persisted fields are number inputs whose id starts with "inp-";
+      // computed "sum-*-disp" outputs are excluded (rewritten by recalc via setInp).
+      const STORAGE_KEY = 'hynt-planner-state';
+      const PERSIST = 'input[type="number"][id^="inp-"]';
+      let state = {}; // { [input.id]: value }
+
+      function persist() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        } catch (e) {}
+      }
+
+      // Update only the field that changed, then write through. Code that sets a
+      // readonly inp- field programmatically must call this afterward (input events
+      // don't fire on programmatic/readonly changes).
+      function saveField(inp) {
+        state[inp.id] = inp.value;
+        persist();
+      }
+
+      // One-time full scan used on init to seed every persistable field (incl. the
+      // readonly ones, which never fire `input`). NOT called per keystroke.
+      function saveAll() {
+        document.querySelectorAll(PERSIST).forEach((inp) => {
+          state[inp.id] = inp.value;
+        });
+        persist();
+      }
+
+      function loadState() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          const parsed = raw ? JSON.parse(raw) : null;
+          // Guard against malformed/tampered storage that parses to a non-object
+          // (null, number, array) — otherwise hasOwnProperty below would throw.
+          state =
+            parsed && typeof parsed === 'object' && !Array.isArray(parsed)
+              ? parsed
+              : {};
+          document.querySelectorAll(PERSIST).forEach((inp) => {
+            if (Object.prototype.hasOwnProperty.call(state, inp.id)) {
+              inp.value = state[inp.id];
+            }
+          });
+        } catch (e) {
+          state = {}; // corrupt/unavailable — fall back to defaults
+        }
+      }
+
       function recalc() {
         // ── ENGAGEMENT (Upper/Mid Funnel) ──
         const engFees = v('inp-eng-monthly') * v('inp-eng-months');
@@ -2836,7 +2886,10 @@
 
       // ── Wire all inputs ──
       document.querySelectorAll('input[type="number"]').forEach((inp) => {
-        inp.addEventListener('input', recalc);
+        inp.addEventListener('input', () => {
+          recalc();
+          saveField(inp);
+        });
       });
 
       // ── Reset ──
@@ -2845,6 +2898,10 @@
         document.querySelectorAll('input[type="number"]').forEach((inp) => {
           inp.value = inp.defaultValue;
         });
+        state = {};
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+        } catch (e) {}
         recalc();
       }
       $('reset-btn').addEventListener('click', resetAll);
@@ -3230,7 +3287,9 @@
       $('export-btn').addEventListener('click', exportExcel);
 
       // ── Init ──
+      loadState();
       recalc();
+      saveAll();
     </script>
   </body>
 </html>
