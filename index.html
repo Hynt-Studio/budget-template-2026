@@ -229,6 +229,102 @@
         color: var(--heading);
       }
 
+      /* ── Mobile section nav (shown < 700px) ── */
+      .mobile-nav {
+        display: none;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.6rem;
+        background: var(--surface-alt);
+        border: 1px solid var(--border);
+        border-bottom: none;
+        border-radius: var(--radius) var(--radius) 0 0;
+      }
+      .mobile-nav-arrow {
+        flex-shrink: 0;
+        width: 44px;
+        height: 44px;
+        font-size: 1.1rem;
+        line-height: 1;
+        background: transparent;
+        border: 1.5px solid var(--heading);
+        border-radius: var(--radius);
+        color: var(--heading);
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          color 0.15s;
+      }
+      .mobile-nav-arrow:hover {
+        background: var(--pri);
+        color: #1a1a1a;
+      }
+      .mobile-nav-arrow.is-hidden {
+        visibility: hidden;
+      }
+      /* Custom two-line label with a transparent native <select> overlaid
+         on top, so the OS picker still drives selection. */
+      .mobile-nav-jump {
+        flex: 1;
+        min-width: 0;
+        position: relative;
+      }
+      .mobile-nav-label {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.05rem;
+        min-height: 44px;
+        padding: 0.3rem 1.9rem;
+        background: var(--surface);
+        border: 1.5px solid var(--border-dark);
+        border-radius: var(--radius-sm);
+        text-align: center;
+        pointer-events: none;
+      }
+      .mobile-nav-cat {
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-weight: 700;
+        color: var(--heading);
+        opacity: 0.55;
+        line-height: 1.2;
+      }
+      .mobile-nav-name {
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--heading);
+        line-height: 1.2;
+      }
+      .mobile-nav-jump::after {
+        content: '\25BE';
+        position: absolute;
+        right: 0.7rem;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 0.7rem;
+        color: var(--text-light);
+        pointer-events: none;
+      }
+      .mobile-nav-jump .mobile-nav-select {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        border: none;
+        background: transparent;
+        opacity: 0;
+        cursor: pointer;
+      }
+      .mobile-nav-jump:focus-within .mobile-nav-label {
+        border-color: var(--green);
+        box-shadow: 0 0 0 3px rgba(69, 98, 73, 0.15);
+      }
+
       /* ── Panels ── */
       .panels {
         background: var(--surface);
@@ -479,6 +575,25 @@
       @media (max-width: 700px) {
         .two-col {
           grid-template-columns: 1fr;
+        }
+        .tabs {
+          display: none;
+        }
+        .mobile-nav {
+          display: flex;
+        }
+        .main {
+          padding: 0;
+        }
+        .panels {
+          box-shadow: none;
+        }
+      }
+      /* Narrow widths where the full tab bar still shows but cramps:
+         let each tab's section name wrap to a second line. */
+      @media (max-width: 900px) {
+        .tab {
+          white-space: normal;
         }
       }
 
@@ -857,6 +972,43 @@
         </button>
       </div>
 
+      <div class="mobile-nav" id="mobileNav">
+        <button
+          class="mobile-nav-arrow prev"
+          id="mobilePrev"
+          aria-label="Previous section"
+        >
+          &#8592;
+        </button>
+        <div class="mobile-nav-jump">
+          <span class="mobile-nav-label" aria-hidden="true">
+            <span class="mobile-nav-cat" id="mobileNavCat">Awareness</span>
+            <span class="mobile-nav-name" id="mobileNavName">
+              Upper/Mid Funnel
+            </span>
+          </span>
+          <select
+            class="mobile-nav-select"
+            id="mobileSelect"
+            aria-label="Jump to section"
+          >
+            <option value="engagement">Awareness · Upper/Mid Funnel</option>
+            <option value="rg">Conversion · Regular Giving</option>
+            <option value="cash">Conversion · Cash Acquisition</option>
+            <option value="email">Lead Generation · Email Leads</option>
+            <option value="telephone">Lead Generation · Telephone Leads</option>
+            <option value="summary">Overview · Budget Summary</option>
+          </select>
+        </div>
+        <button
+          class="mobile-nav-arrow next"
+          id="mobileNext"
+          aria-label="Next section"
+        >
+          &#8594;
+        </button>
+      </div>
+
       <div class="panels">
         <!-- ══════════════════════════════════════════
              PANEL 1: BUDGET SUMMARY
@@ -1038,9 +1190,7 @@
           <!-- Email retention -->
           <div class="sub-section">
             <div class="sub-section-title">Digital Retention through Email</div>
-            <div
-              style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem"
-            >
+            <div class="two-col">
               <div>
                 <div class="inline-field">
                   <label>Your current email file size</label>
@@ -1164,9 +1314,7 @@
             <div class="sub-section-title">
               Direct Costs (Agency &amp; Operational Fees)
             </div>
-            <div
-              style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem"
-            >
+            <div class="two-col">
               <div>
                 <div class="inline-field">
                   <label>Acquisition Campaign — Agency Fees</label>
@@ -2866,6 +3014,29 @@
       }
 
       // ── Tab switching ──
+      const TAB_ORDER = [
+        'engagement',
+        'rg',
+        'cash',
+        'email',
+        'telephone',
+        'summary',
+      ];
+
+      function syncMobileNav(name) {
+        const i = TAB_ORDER.indexOf(name);
+        const select = $('mobileSelect');
+        if (select) select.value = name;
+        const tab = document.querySelector(`.tab[data-tab="${name}"]`);
+        if (tab) {
+          const cat = tab.querySelector('.tab-type')?.textContent.trim() || '';
+          $('mobileNavCat').textContent = cat;
+          $('mobileNavName').textContent = tab.textContent.replace(cat, '').trim();
+        }
+        $('mobilePrev').classList.toggle('is-hidden', i <= 0);
+        $('mobileNext').classList.toggle('is-hidden', i >= TAB_ORDER.length - 1);
+      }
+
       function switchTab(name) {
         document
           .querySelectorAll('.tab')
@@ -2877,12 +3048,31 @@
         if (tab) tab.classList.add('active');
         const panel = $('panel-' + name);
         if (panel) panel.classList.add('active');
+        syncMobileNav(name);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
       document.querySelectorAll('.tab').forEach((tab) => {
         tab.addEventListener('click', () => switchTab(tab.dataset.tab));
       });
+
+      // ── Mobile section nav ──
+      $('mobileSelect').addEventListener('change', (e) =>
+        switchTab(e.target.value),
+      );
+      $('mobilePrev').addEventListener('click', () => {
+        const i = TAB_ORDER.indexOf($('mobileSelect').value);
+        if (i > 0) switchTab(TAB_ORDER[i - 1]);
+      });
+      $('mobileNext').addEventListener('click', () => {
+        const i = TAB_ORDER.indexOf($('mobileSelect').value);
+        if (i < TAB_ORDER.length - 1) switchTab(TAB_ORDER[i + 1]);
+      });
+
+      // Initialise mobile nav to the active tab
+      syncMobileNav(
+        document.querySelector('.tab.active')?.dataset.tab || TAB_ORDER[0],
+      );
 
       // ── Wire all inputs ──
       document.querySelectorAll('input[type="number"]').forEach((inp) => {
